@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEIL SteriSafe</title>
+    <style>
+        /* 웹페이지 전체 기본 설정 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: #1a1d20; /* 배경색: 어두운 회색/검정 */
+            color: #ffffff; /* 기본 글자색: 흰색 */
+            font-family: 'Malgun Gothic', sans-serif; /* 글꼴: 맑은 고딕 */
+        }
+        
+        /* 세로 방향 정렬 및 상하 공간 분할 설정 */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* 상단 네비게이션(로고 및 메뉴) 영역 스타일 */
+        header {
+            display: flex;
+            justify-content: space-between; /* 양 끝으로 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            padding: 20px 50px; /* 안쪽 여백 (위아래 20px, 양옆 50px) */
+            background-color: #1a1d20;
+            border-bottom: 1px solid #333; /* 아래쪽 경계선 */
+        }
+
+        /* 로고 이미지 크기 조절 */
+        .logo img {
+            height: 40px;
+        }
+
+        /* 상단 메뉴 글자 스타일 */
+        nav a {
+            color: #ffffff;
+            text-decoration: none; /* 밑줄 제거 */
+            margin-left: 30px; /* 메뉴 간격 */
+            font-size: 15px;
+        }
+
+        /* 본문 전체 영역 레이아웃 (좌측 글자 + 우측 특허박스) */
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 50px;
+            flex-grow: 1;
+            max-width: 1280px;
+            margin: 0 auto; /* 가운데 정렬 */
+            width: 100%;
+            box-sizing: border-box;
+            gap: 40px; /* 좌우 구역 사이 간격 */
+        }
+
+        /* 좌측 텍스트 구역 크기 설정 */
+        .text-section {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        /* 의료기관 메인 제목 스타일 (우측 정렬 적용) */
+        .text-section h1 {
+            font-size: 38px; /* 글자 크기 */
+            line-height: 1.3; /* 줄 간격 */
+            margin-bottom: 20px; /* 아래쪽 여백 */
+            text-align: right; /* 우측 정렬 */
+            word-break: keep-all; /* 단어 단위로 줄바꿈 방지 */
+        }
+
+        /* 좌측 본문 설명글 스타일 (우측 정렬 적용 완료) */
+        .text-section p {
+            color: #b0b0b0; /* 회색 글자 */
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: right; /* 우측 정렬 */
+            word-break: keep-all;
+        }
+
+        /* 우측 특허 상자 영역 스타일 */
+        .patent-section {
+            background-color: #24282c; /* 상자 배경색 */
+            border: 1px solid #3a3f44; /* 상자 테두리선 */
+            border-radius: 10px; /* 테두리 둥글게 */
+            padding: 20px; /* 상자 내부 여백 */
+            width: 480px;
+            flex-shrink: 0;
+            text-align: center; /* 상자 내부 전체 가운데 정렬 */
+        }
+
+        /* PATENT 제목 스타일 (상자 안에서 가운데 정렬됨) */
+        .patent-section h3 {
+            font-size: 15px;
+            margin-bottom: 10px;
+            word-break: keep-all;
+        }
+
+        /* 특허 상자 내부 설명글 스타일 */
+        .patent-section p {
+            color: #b0b0b0;
+            font-size: 13px;
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+
+        /* 특허 이미지 크기 자동 맞춤 */
+        .patent-img img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        /* 하단 푸터(연락처 및 주소) 영역 스타일 */
+        footer {
+            border-top: 1px solid #333; /* 위쪽 경계선 */
+            padding: 20px 50px;
+            font-size: 13px;
+            background-color: #ffffff; /* 하단 배경 흰색 */
+            color: #333; /* 글자색 진하게 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 영역 시작 -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="JEIL SteriSafe Logo">
+        </div>
+        <nav>
+            <a href="#">About</a>
+            <a href="#">EO Safety</a>
+            <a href="#">H₂O₂ Safety</a>
+            <a href="#">Patent</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+    <!-- 상단 영역 끝 -->
+
+    <!-- 본문 영역 시작 -->
+    <div class="main-content">
+        <!-- 좌측 텍스트 구역 -->
+        <div class="text-section">
+            <!-- 우측 정렬이 적용된 제목 -->
+            <h1>의료기관 멸균 및 멸균안전<br>전문 기술 솔루션</h1>
+            
+            <!-- 우측 정렬이 적용된 본문 설명문 -->
+            <p>JEIL은 EO(Ethylene Oxide) 및 과산화수소(H₂O₂) 멸균환경의 안전성을<br>극대화하기 위한 장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
+        </div>
+
+        <!-- 우측 특허 상자 구역 (가운데 정렬 적용됨) -->
+        <div class="patent-section">
+            <h3>Patent No. 10-2803770 — 멸균잔류유독가스 자동배기시스템</h3>
+            
+            <p>가스·증기 멸균 시 멸균기 내부 잔류유독가스와 누출가스를<br>자동으로 배출하여 작업자의 노출 위험을 원천 차단합니다.</p>
+            
+            <div class="patent-img">
+                <img src="patent_img.png" alt="멸균기 잔류 유독가스 자동 배기 시스템 장비 구성도">
+            </div>
+        </div>
+    </div>
+    <!-- 본문 영역 끝 -->
+
+    <!-- 하단 푸터 영역 시작 -->
+    <footer>
+        <div>JEIL SteriSafe | Designing Safer Sterilization Environments</div>
+        <div>
+            전화: <strong>032-623-6233</strong> &nbsp;|&nbsp; 이메일: jeilsterisafe@naver.com<br>
+            Office 1: 인천 부평구 부평대로 283, 우림라이온스밸리 A동 B210호<br>
+            Office 2: 인천 부평구 부평대로 283, 우림라이온스밸리 A동 118B호
+        </div>
+    </footer>
+    <!-- 하단 푸터 영역 끝 -->
+
+</body>
+</html>
