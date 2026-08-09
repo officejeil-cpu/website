@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JEIL SteriSafe</title>
+    <!-- FontAwesome 아이콘 사용을 위한 CDN 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         html, body {
             height: 100%;
@@ -62,7 +64,7 @@
             color: #2563eb;
         }
 
-        /* 회사소개 모달 스타일 */
+        /* 공통 모달 스타일 */
         .company-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
         .company-content { background: #ffffff; width: 85%; max-width: 820px; max-height: 82vh; overflow-y: auto; padding: 50px 60px; border-radius: 16px; position: relative; line-height: 1.8; color: #334155; box-shadow: 0 20px 40px rgba(0,0,0,0.15); box-sizing: border-box; }
         .modal-header-title { font-size: 26px; font-weight: 700; color: #0f172a; margin-bottom: 25px; letter-spacing: -0.5px; }
@@ -91,8 +93,20 @@
 
         footer { background-color: #d8dde4; color: #475569; border-top: 1px solid #cbd5e1; padding: 15px 50px; font-size: 12px; }
         .partner-logos { display: flex; justify-content: space-around; margin-bottom: 12px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; font-weight: bold; font-size: 11px; }
-        .footer-info { display: flex; justify-content: space-between; gap: 30px; }
-        .footer-item { display: flex; align-items: center; gap: 6px; }
+        
+        /* 푸터 레이아웃 스타일 설정: 그리드를 사용하여 상하 행의 열 너비를 완전히 일치시킴 */
+        .footer-info { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .footer-info-right { display: flex; flex-direction: column; gap: 6px; }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: minmax(320px, auto) 3cm minmax(140px, auto);
+            align-items: center;
+        }
+        
+        .footer-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .footer-item i { color: #2563eb; width: 18px; text-align: center; display: inline-flex; justify-content: center; align-items: center; }
+        
         .email-link { cursor: pointer; text-decoration: none; color: #475569; }
         .email-link:hover { color: #2563eb; text-decoration: underline; }
     </style>
@@ -106,8 +120,7 @@
         </div>
         <nav>
             <a onclick="openCompanyModal()">회사소개</a>
-            <!-- 하위 폴더로 연결되는 링크 경로 -->
-            <a href="sterilization-safety/gas-exposure-status/index.html">멸균안전기술</a>
+            <a onclick="openTechModal()">멸균안전기술</a>
             <a href="#">특허기술</a>
             <a href="#">제품소개</a>
             <a onclick="openModal('info@jeilss.co.kr')">AS접수</a>
@@ -156,10 +169,27 @@
         </div>
     </div>
 
+    <!-- 멸균안전기술 모달 (동영상 및 'X' 버튼 추가) -->
+    <div id="techModal" class="company-modal" onclick="closeTechModal()">
+        <div class="company-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeTechModal()">&times;</button>
+            <div class="modal-header-title">멸균안전기술 동영상 안내</div>
+            <div style="text-align: center; margin-top: 20px;">
+                <video controls style="width: 100%; max-height: 400px; border-radius: 8px; background: #000;">
+                    <source src="sterilization-safety/gas-exposure-status/video.mp4" type="video/mp4">
+                    브라우저가 동영상 재생을 지원하지 않습니다.
+                </video>
+            </div>
+            <p style="margin-top: 20px; font-size: 15px; color: #475569; text-align: center;">
+                JEIL의 멸균안전 및 유해가스 자동배기 시스템 관련 기술 영상입니다.
+            </p>
+        </div>
+    </div>
+
     <div class="main-content">
         <div class="text-section">
             <h1>의료기관 멸균 및 멸균안전<br>전문 기술 솔루션</h1>
-            <p>JEIL은 EO 및 과산화수소 멸균환경의 안전성을 극대화하기 위한 장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
+            <p>JEIL은 EO 및 과산화수소 멸균환경의 안전성을 극대화하기 위한<br>장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
             <div class="btn-group">
                 <a href="#" class="btn-red">자동배기시스템</a>
                 <a href="#" class="btn-blue">흡입식감지기</a>
@@ -176,6 +206,7 @@
             <button class="close-btn" onclick="closeModal()">&times;</button>
             <h3>빠른 문의 / AS 접수</h3>
             <p><strong id="modalEmailText" style="color:#03c75a;">info@jeilss.co.kr</strong></p>
+            <p style="font-size: 13px; color: #64748b; margin-top: -10px; margin-bottom: 15px;">이메일 주소가 자동으로 복사됩니다.<br>메일 작성란에 그대로 붙여넣기(Ctrl+V) 하세요.</p>
             <button class="mail-btn" onclick="openNaverMailAndCopy()">네이버 메일로 문의하기</button>
         </div>
     </div>
@@ -185,18 +216,49 @@
             <span>JEIL STERISAFE</span> <span>MEDICAL SYSTEM</span> <span>AUTO EXHAUST TECH</span> <span>SAFETY SOLUTION</span>
         </div>
         <div class="footer-info">
-            <div class="footer-info-left"><div>JEIL SteriSafe | Designing Safer Sterilization Environments</div></div>
+            <div class="footer-info-left">
+                <div>JEIL SteriSafe | Designing Safer Sterilization Environments</div>
+            </div>
             <div class="footer-info-right">
-                <div class="footer-item"><span>1. 인천 부평구 부평대로 283, 우림라이온스밸리 A동 B210호</span></div>
-                <div class="footer-item"><span class="email-link" onclick="openModal('info@jeilss.co.kr')">info@jeilss.co.kr</span></div>
+                <div class="footer-grid">
+                    <!-- 주소 1 -->
+                    <div class="footer-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>1. 인천 부평구 부평대로 283, 우림라이온스밸리 A동 B210호</span>
+                    </div>
+                    <div></div> <!-- 간격용 빈 공간 (3cm) -->
+                    <!-- 전화번호 -->
+                    <div class="footer-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>032-623-6233</span>
+                    </div>
+
+                    <!-- 주소 2 -->
+                    <div class="footer-item" style="margin-top: 6px;">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>2. 인천 부평구 부평대로 283, 우림라이온스밸리 A동 118B호</span>
+                    </div>
+                    <div style="margin-top: 6px;"></div> <!-- 간격용 빈 공간 -->
+                    <!-- 이메일 -->
+                    <div class="footer-item" style="margin-top: 6px;">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span class="email-link" onclick="openModal('info@jeilss.co.kr')">info@jeilss.co.kr</span>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
     <script>
+        // 회사소개 모달 제어
         function openCompanyModal() { document.getElementById('companyModal').style.display = 'flex'; }
         function closeCompanyModal() { document.getElementById('companyModal').style.display = 'none'; }
         
+        // 멸균안전기술 모달 제어
+        function openTechModal() { document.getElementById('techModal').style.display = 'flex'; }
+        function closeTechModal() { document.getElementById('techModal').style.display = 'none'; }
+
+        // AS 접수 모달 제어
         let currentEmail = "info@jeilss.co.kr";
         function openModal(email) {
             currentEmail = email;
