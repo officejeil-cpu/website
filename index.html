@@ -26,9 +26,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 50px;
+            padding: 12px 30px;
             background-color: #ffffff;
             border-bottom: 1px solid #e2e8f0;
+            box-sizing: border-box;
+            width: 100%;
         }
         
         .logo-container {
@@ -37,14 +39,15 @@
             gap: 10px;
         }
         .logo img {
-            height: 42px;
+            height: 36px;
             display: block;
         }
         .logo-text {
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 700;
             color: #334155;
             letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
         nav {
@@ -54,11 +57,12 @@
         nav a {
             color: #475569;
             text-decoration: none;
-            margin-left: 32px;
+            margin-left: 24px;
             font-size: 14px;
             font-weight: 600;
             transition: color 0.2s;
             cursor: pointer;
+            white-space: nowrap;
         }
         nav a:hover {
             color: #2563eb;
@@ -66,64 +70,67 @@
 
         /* 공통 모달 스타일 */
         .company-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
-        .company-content { background: #ffffff; width: 85%; max-width: 820px; max-height: 82vh; overflow-y: auto; padding: 50px 60px; border-radius: 16px; position: relative; line-height: 1.8; color: #334155; box-shadow: 0 20px 40px rgba(0,0,0,0.15); box-sizing: border-box; }
-        .modal-header-title { font-size: 26px; font-weight: 700; color: #0f172a; margin-bottom: 25px; letter-spacing: -0.5px; }
-        .company-section-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-top: 35px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .company-section-title::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: #2563eb; border-radius: 2px; }
-        .company-content p { font-size: 15px; color: #475569; margin-bottom: 15px; word-break: keep-all; }
-        .solution-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 20px; background: #f8fafc; padding: 20px 25px; border-radius: 8px; border: 1px solid #e2e8f0; margin: 15px 0; }
-        .solution-item { font-size: 14px; color: #334155; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .company-content { background: #ffffff; width: 90%; max-width: 820px; max-height: 82vh; overflow-y: auto; padding: 40px; border-radius: 16px; position: relative; line-height: 1.8; color: #334155; box-shadow: 0 20px 40px rgba(0,0,0,0.15); box-sizing: border-box; }
+        .modal-header-title { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 20px; letter-spacing: -0.5px; word-break: keep-all; }
+        .company-section-title { font-size: 17px; font-weight: 700; color: #1e293b; margin-top: 30px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; word-break: keep-all; }
+        .company-section-title::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: #2563eb; border-radius: 2px; flex-shrink: 0; }
+        .company-content p { font-size: 14px; color: #475569; margin-bottom: 15px; word-break: keep-all; }
+        .solution-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 15px; background: #f8fafc; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin: 15px 0; }
+        .solution-item { font-size: 13px; color: #334155; font-weight: 600; display: flex; align-items: center; gap: 8px; word-break: keep-all; }
         .solution-item::before { content: "▪"; color: #2563eb; font-size: 12px; }
-        .close-btn { position: absolute; top: 25px; right: 30px; font-size: 28px; cursor: pointer; border: none; background: none; color: #94a3b8; }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 26px; cursor: pointer; border: none; background: none; color: #94a3b8; }
         .close-btn:hover { color: #0f172a; }
 
-        .main-content { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; flex-grow: 1; max-width: 1450px; margin: 0 auto; width: 100%; box-sizing: border-box; gap: 40px; }
+        .main-content { display: flex; justify-content: space-between; align-items: center; padding: 30px; flex-grow: 1; max-width: 1450px; margin: 0 auto; width: 100%; box-sizing: border-box; gap: 30px; }
         .text-section { flex: 1; max-width: 550px; text-align: right; }
-        .text-section h1 { font-size: 38px; line-height: 1.3; margin-bottom: 15px; font-weight: 700; color: #0f172a; word-break: keep-all; }
+        .text-section h1 { font-size: 34px; line-height: 1.3; margin-bottom: 15px; font-weight: 700; color: #0f172a; word-break: keep-all; }
         .text-section p { color: #334155; font-size: 15px; line-height: 1.6; margin-bottom: 25px; word-break: keep-all; }
-        .btn-group { display: flex; gap: 12px; justify-content: flex-end; }
-        .btn-red { background-color: #dc2626; color: #ffffff; padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; }
-        .btn-blue { background-color: #2563eb; color: #ffffff; padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; }
-        .equipment-section { flex: 1.3; max-width: 715px; background-color: rgba(255, 255, 255, 0.95); border: 1px solid #cbd5e1; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: center; }
-        .equipment-section img { max-width: 100%; height: auto; max-height: 420px; border-radius: 6px; }
+        .btn-group { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+        .btn-red { background-color: #dc2626; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; white-space: nowrap; }
+        .btn-blue { background-color: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; white-space: nowrap; }
+        .equipment-section { flex: 1.3; max-width: 715px; background-color: rgba(255, 255, 255, 0.95); border: 1px solid #cbd5e1; border-radius: 10px; padding: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: center; box-sizing: border-box; }
+        .equipment-section img { max-width: 100%; height: auto; max-height: 380px; border-radius: 6px; display: block; margin: 0 auto; }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background-color: #ffffff; padding: 30px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); position: relative; text-align: center; }
-        .mail-btn { display: block; background-color: #03c75a; color: white; padding: 12px 24px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; box-sizing: border-box; padding: 20px; }
+        .modal-box { background-color: #ffffff; padding: 30px 20px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); position: relative; text-align: center; box-sizing: border-box; }
+        .mail-btn { display: block; background-color: #03c75a; color: white; padding: 12px 24px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; width: 100%; margin-top: 20px; box-sizing: border-box; }
 
-        footer { background-color: #d8dde4; color: #475569; border-top: 1px solid #cbd5e1; padding: 15px 50px; font-size: 12px; }
-        .partner-logos { display: flex; justify-content: space-around; margin-bottom: 12px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; font-weight: bold; font-size: 11px; flex-wrap: wrap; gap: 10px; }
+        footer { background-color: #d8dde4; color: #475569; border-top: 1px solid #cbd5e1; padding: 20px 30px; font-size: 12px; box-sizing: border-box; width: 100%; }
+        .partner-logos { display: flex; justify-content: space-around; margin-bottom: 12px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; font-weight: bold; font-size: 11px; flex-wrap: wrap; gap: 8px; text-align: center; }
         
         .footer-info { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .footer-info-right { display: flex; flex-direction: column; gap: 6px; }
+        .footer-info-right { display: flex; flex-direction: column; gap: 6px; width: 100%; }
         
         .footer-grid {
             display: grid;
-            grid-template-columns: minmax(320px, auto) 3cm minmax(140px, auto);
+            grid-template-columns: minmax(280px, auto) 2cm minmax(140px, auto);
             align-items: center;
         }
         
-        .footer-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .footer-item i { color: #2563eb; width: 18px; text-align: center; display: inline-flex; justify-content: center; align-items: center; }
+        .footer-item { display: flex; align-items: center; gap: 6px; }
+        .footer-item i { color: #2563eb; width: 18px; text-align: center; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; }
         
         .email-link { cursor: pointer; text-decoration: none; color: #475569; }
         .email-link:hover { color: #2563eb; text-decoration: underline; }
 
         /* ================= 모바일 반응형 스타일 (태블릿 및 스마트폰) ================= */
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 950px) {
             header {
                 flex-direction: column;
-                padding: 15px 20px;
+                padding: 15px 15px;
                 gap: 12px;
+            }
+            .logo-text {
+                font-size: 18px;
             }
             nav {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 10px;
+                gap: 6px 12px;
+                width: 100%;
             }
             nav a {
                 margin-left: 0;
-                margin: 0 8px;
                 font-size: 13px;
             }
             .main-content {
@@ -137,10 +144,12 @@
                 text-align: center;
             }
             .text-section h1 {
-                font-size: 24px;
+                font-size: 22px;
+                word-break: keep-all;
             }
             .text-section p {
                 font-size: 14px;
+                word-break: keep-all;
             }
             .btn-group {
                 justify-content: center;
@@ -158,7 +167,7 @@
                 grid-template-columns: 1fr;
             }
             footer {
-                padding: 15px 20px;
+                padding: 15px;
             }
             .footer-info {
                 flex-direction: column;
@@ -170,9 +179,11 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
+                width: 100%;
             }
             .footer-item {
                 white-space: normal;
+                word-break: break-all;
             }
         }
     </style>
@@ -220,7 +231,7 @@
                 <div class="solution-item">Process Challenge Device (PCD)</div>
             </div>
             
-            <p style="font-size: 14px; color: #64748b; margin-top: 10px;">특히 EO(에틸렌옥사이드), 과산화수소(H₂O₂ Vapor) 등 멸균공정에서 발생할 수 있는 유해가스의 특성을 고려하여 보다 안전한 작업환경을 만들기 위한 다양한 기술을 연구하고 있습니다.</p>
+            <p style="font-size: 13px; color: #64748b; margin-top: 10px;">특히 EO(에틸렌옥사이드), 과산화수소(H₂O₂ Vapor) 등 멸균공정에서 발생할 수 있는 유해가스의 특성을 고려하여 보다 안전한 작업환경을 만들기 위한 다양한 기술을 연구하고 있습니다.</p>
 
             <div class="company-section-title">제일은 다른 시각으로 접근합니다.</div>
             <p>오랜 시간 동안 현장에서 직접 보고, 듣고, 고민하면서<br>
@@ -240,13 +251,13 @@
         <div class="company-content" onclick="event.stopPropagation()">
             <button class="close-btn" onclick="closeTechModal()">&times;</button>
             <div class="modal-header-title">멸균안전기술 동영상 안내</div>
-            <div style="text-align: center; margin-top: 20px;">
-                <video controls style="width: 100%; max-height: 400px; border-radius: 8px; background: #000;">
+            <div style="text-align: center; margin-top: 15px;">
+                <video controls style="width: 100%; max-height: 350px; border-radius: 8px; background: #000;">
                     <source src="sterilization-safety/gas-exposure-status/video.mp4" type="video/mp4">
                     브라우저가 동영상 재생을 지원하지 않습니다.
                 </video>
             </div>
-            <p style="margin-top: 20px; font-size: 15px; color: #475569; text-align: center;">
+            <p style="margin-top: 15px; font-size: 14px; color: #475569; text-align: center;">
                 JEIL의 멸균안전 및 유해가스 자동배기 시스템 관련 기술 영상입니다.
             </p>
         </div>
@@ -254,8 +265,8 @@
 
     <div class="main-content">
         <div class="text-section">
-            <h1>의료기관 멸균 및<br>멸균안전 전문 기술 솔루션</h1>
-            <p>JEIL은 EO 및 과산화수소 멸균환경의 안전성을<br>극대화하기 위한 장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
+            <h1>의료기관 멸균 및 멸균안전 전문 기술 솔루션</h1>
+            <p>JEIL은 EO 및 과산화수소 멸균환경의 안전성을 극대화하기 위한 장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
             <div class="btn-group">
                 <a href="#" class="btn-red">자동배기시스템</a>
                 <a href="#" class="btn-blue">흡입식감지기</a>
@@ -282,9 +293,7 @@
             <span>JEIL STERISAFE</span> <span>MEDICAL SYSTEM</span> <span>AUTO EXHAUST TECH</span> <span>SAFETY SOLUTION</span>
         </div>
         <div class="footer-info">
-            <div class="footer-info-left">
-                <div>JEIL SteriSafe | Designing Safer Sterilization Environments</div>
-            </div>
+            <div class="footer-info-left" style="display:none;"></div>
             <div class="footer-info-right">
                 <div class="footer-grid">
                     <!-- 주소 1 -->
