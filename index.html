@@ -226,20 +226,20 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
 
 /* 전기 신호선: 부드럽게 흐르는 파란 점선 (튜브와 구분) */
 @keyframes flowS { to { stroke-dashoffset: -12; } }
-#s3, #e12, #e31 { stroke: #38bdf8; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; }
-.stage.filled #s3, .stage.filled #e12 { stroke: #0284c7; }
+#s3, #e12, #e31 { stroke: #16a34a; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; }
+.stage.filled #s3, .stage.filled #e12 { stroke: #15803d; }
 .stage.s3-on #s3 { opacity: 1; animation: flowS 1.2s linear infinite; }
 .stage.e12-on #e12 { opacity: 1; animation: flowS 1.2s linear infinite; }
 
 /* 3번 후드 → 1번 감지기 전기 신호선 (파란 점선) */
-#e31 { stroke: #38bdf8; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; }
-.stage.filled #e31 { stroke: #0284c7; }
+#e31 { stroke: #16a34a; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; }
+.stage.filled #e31 { stroke: #15803d; }
 .stage.s1-on #e31 { opacity: 1; animation: flowS 1.2s linear infinite; }
 
 /* 2번 위쪽 연결: 실선으로 확실히 표시 (4번 공통선과 같은 높이) */
-#s3top { stroke: #38bdf8; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; opacity: 0; }
+#s3top { stroke: #16a34a; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; opacity: 0; }
 .stage.s3-on #s3top { opacity: 1; animation: flowS 1.2s linear infinite; }
-.stage.filled #s3top { stroke: #0284c7; }
+.stage.filled #s3top { stroke: #15803d; }
 
 /* 조각 → 결합 */
 .ph { transition: opacity .6s ease var(--d, 0s); }
@@ -410,6 +410,9 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
   .flow-strip { flex-direction: column; }
   .fs-arrow { transform: rotate(90deg); line-height: 1; }
 }
+
+/* 청사진 그림 전체를 아래로 내림 (바닥선은 제자리) */
+.stage > .drawing { position: absolute !important; left: 0; top: 0; width: 100%; height: 100%; transform: translateY(4.8%); z-index: 1; }
 </style>
 </head>
 <body>
@@ -455,8 +458,6 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
 
 <section class="site-sec" id="aes">
     <p class="eyebrow">멸균안전기술</p>
-    <h2 style="margin-top:8px;">구조 애니메이션</h2>
-    <p class="sub">흩어진 볼트와 조각이 모여 부품이 조립되고, 조립된 부품이 하나의 AES로 묶여 공기와 전기 신호가 흐르는 순서를 보여 줍니다. 그림은 개략도이며 실제 비율과 다를 수 있습니다.</p>
 
     <div class="stage-wrap">
       <div class="stage" id="stage" role="img" aria-label="플랫덕트 후드에서 가스가 유입되고, 후드에서 가스를 뽑아 H-100 감지기가 감지하고, 전기 신호가 AES 컨트롤러를 거쳐 배기전용팬을 작동시키는 구조도.">
@@ -522,16 +523,16 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
             <linearGradient id="gDark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5b6573"/><stop offset="0.5" stop-color="#2f3742"/><stop offset="1" stop-color="#1f252d"/></linearGradient>
             <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7dd3fc"/></marker>
           </defs>
-          <defs><pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M-2 16 L16 -2 M-2 2 L2 -2 M12 16 L16 12" stroke="#7dd3fc" stroke-width="1.6"/></pattern></defs><g class="floor-g"><rect class="floor-hatch" x="0" y="801" width="906" height="34" fill="url(#hatch)"/><path class="part floor" pathLength="1" d="M0 800 H906" stroke-width="3"/></g>
+          <defs><pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M-2 16 L16 -2 M-2 2 L2 -2 M12 16 L16 12" stroke="#7dd3fc" stroke-width="1.6"/></pattern></defs><g class="floor-g" transform="translate(0,-40)"><rect class="floor-hatch" x="0" y="801" width="906" height="34" fill="url(#hatch)"/><path class="part floor" pathLength="1" d="M0 800 H906" stroke-width="3"/></g>
           <!-- 신호선 (빨간색 튜브: 분기점 → 후드 / AES CR) -->
           <circle cx="806.5" cy="366" r="5" fill="#38bdf8"/>
-          <g class="fit"><rect x="797.5" y="358" width="18" height="16" rx="4" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><rect x="800.5" y="361" width="12" height="3" rx="1.5" fill="#cfefff" opacity=".7"/><circle cx="570" cy="556" r="5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><circle cx="806.5" cy="800" r="4" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/></g>
+          <g class="fit"><rect x="797.5" y="358" width="18" height="16" rx="4" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><rect x="800.5" y="361" width="12" height="3" rx="1.5" fill="#cfefff" opacity=".7"/><circle cx="570" cy="556" r="5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><circle cx="806.5" cy="760" r="4" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/></g>
           <g class="tube tb-s5"><path class="tl" pathLength="1" d="M715.5 281 V326 Q715.5 340 729.5 340 H806" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M715.5 281 V326 Q715.5 340 729.5 340 H806" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M715.5 281 V326 Q715.5 340 729.5 340 H806" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g><circle cx="806" cy="340" r="4.5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><circle cx="715.5" cy="283" r="3.5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/>
           <g class="tube tb-s0"><path class="tl" pathLength="1" d="M806.3 273.0 V366" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.3 273.0 V366" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.3 273.0 V366" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
           <g class="tube tb-s1"><path class="tl" pathLength="1" d="M806.5 366 V492 Q806.5 556 742.5 556 H570" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.5 366 V492 Q806.5 556 742.5 556 H570" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.5 366 V492 Q806.5 556 742.5 556 H570" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
           <path id="e31" class="sig" d="M585 500 H700 V330 H756"/>
           <path id="e12" class="sig" d="M764 100 V18 Q764 4 750 4 H675 V40"/>
-          <g class="tube tb-s4"><path class="tl" pathLength="1" d="M806.5 366 V800" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.5 366 V800" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.5 366 V800" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
+          <g class="tube tb-s4"><path class="tl" pathLength="1" d="M806.5 366 V760" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.5 366 V760" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.5 366 V760" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
           <path id="s3top" class="sig" d="M675 40 V4"/>
           <path id="s3" class="sig" d="M675 4 H196 Q180 4 180 20 V287"/>
           <!-- 가스 흐름 (후드 → 엘보 → 팬) -->
@@ -555,7 +556,7 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
       </div>
 
       <div class="side">
-        <div class="now" aria-live="polite">
+        <div class="now" aria-live="polite" hidden>
           <div class="k" id="stepNo">준비</div>
           <p id="stepText">설계 도면을 그립니다.</p>
         </div>
@@ -565,8 +566,8 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
           <li data-s="3"><span class="n">3</span><span>AES 컨트롤러가 <b>4번 배기팬</b>에 작동 신호를 보냅니다.</span></li>
           <li data-s="4"><span class="n">4</span><span>배기팬이 멸균기 상단 <b>3번 후드</b>와 가스 누출이 우려되는 하단 후드에서 누출 또는 잔류 가스를 <b>동시에 배기</b>합니다.</span></li>
         </ol>
-                <p class="key-point"><b>핵심:</b> 유독가스를 멸균기 <b>상단과 하단에서 동시에 감지</b>하고, <b>동시에 배기</b>합니다.</p>
-        <div class="controls">
+                <p class="key-point" hidden><b>핵심:</b> 유독가스를 멸균기 <b>상단과 하단에서 동시에 감지</b>하고, <b>동시에 배기</b>합니다.</p>
+        <div class="controls" hidden>
           <button id="toggle" type="button">일시정지</button>
           <button id="replay" type="button" hidden>다시 보기</button>
           <button id="skip" type="button" class="ghost">완성 사진 보기</button>
@@ -812,6 +813,20 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
   var timer = null;
   window.startLcd = function () { if (timer) return; timer = setInterval(function () { n = (n + 1) % 201; show(); }, 300); };
   window.stopLcd = function () { clearInterval(timer); timer = null; };
+})();
+</script>
+<script>
+/* 그림 묶음을 하나로 감싸서 아래로 내림 */
+(function () {
+  var st = document.getElementById('stage');
+  if (!st) return;
+  var wrap = document.createElement('div');
+  wrap.className = 'drawing';
+  Array.prototype.slice.call(st.childNodes).forEach(function (n) {
+    if (n.nodeType === 1 && n.classList && n.classList.contains('bp-bg')) return;
+    wrap.appendChild(n);
+  });
+  st.appendChild(wrap);
 })();
 </script>
 </body>
