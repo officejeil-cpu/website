@@ -568,7 +568,7 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
                 <p class="key-point"><b>핵심:</b> 유독가스를 멸균기 <b>상단과 하단에서 동시에 감지</b>하고, <b>동시에 배기</b>합니다.</p>
         <div class="controls">
           <button id="toggle" type="button">일시정지</button>
-          <button id="replay" type="button">다시 보기</button>
+          <button id="replay" type="button" hidden>다시 보기</button>
           <button id="skip" type="button" class="ghost">완성 사진 보기</button>
         </div>
       </div>
@@ -704,7 +704,7 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
     '배기팬이 상단 3번 후드와 하단 후드에서 누출 또는 잔류 가스를 동시에 배기합니다.'
   ];
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var timeline = [], idx = 0, elapsed = 0, lastTick = 0, tick = null, finished = false;
+  var timeline = [], idx = 0, elapsed = 0, lastTick = 0, tick = null, finished = false, loopTimer = null;
 
   function setStep(n) {
     stepNo.textContent = n === 0 ? '준비' : 'STEP ' + n;
@@ -759,6 +759,7 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
     stepNo.textContent = '완성';
     stepText.textContent = steps[4] + ' 실제 설치된 AES 시스템입니다.';
     setBtn();
+    loopTimer = setTimeout(play, 4000);
   }
   function buildTimeline() {
     return [
@@ -781,6 +782,7 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
   }
 
   function play() {
+    clearTimeout(loopTimer); loopTimer = null;
     clearInterval(tick); tick = null;
     finished = false; idx = 0; elapsed = 0;
     stage.className = 'stage';
