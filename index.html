@@ -98,7 +98,7 @@ section { padding-block: 56px 0; }
 .stage.filled .pt { fill: #475569; }
 .stage.sensor-on .pt { fill: var(--gas); }
 
-.sig { fill: none; stroke: var(--blue); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0.25; transition: opacity 0.4s; }
+.sig { fill: none; stroke: var(--blue); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0; transition: opacity 0.4s; }
 .stage.filled .sig { stroke: #0ea5e9; }
 .stage.s1-on #s1, .stage.s2-on #s2, .stage.s3-on #s3 { opacity: 1; animation: flow 0.8s linear infinite; }
 @keyframes flow { to { stroke-dashoffset: -12; } }
@@ -431,6 +431,10 @@ ol.steps li { border-bottom: 1px solid var(--line); }
 /* 배경 없음: 흰 바탕 + 그림만 */
 .stage, .stage.filled { background: #ffffff !important; background-image: none !important; }
 .stage .bp-bg, .stage .aes-glow { display: none !important; }
+
+/* 배경 완전 투명, 고정 점선 테두리 제거 */
+.stage, .stage.filled { background: transparent !important; box-shadow: none !important; }
+.unit-frame, .ph { display: none !important; }
 </style>
 </head>
 <body>
