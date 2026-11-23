@@ -451,9 +451,12 @@ ol.steps li { border-bottom: 1px solid var(--line); }
 .stage.s1-on .jn { opacity: 1; }
 
 /* 주황색 알갱이: 배관을 따라 끊김 없이 계속 흐름 */
-.gas-flow { fill: none; stroke: #f59e0b; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0.1 22; opacity: 0; transition: opacity .6s ease; }
-.stage.gas-on .gas-flow { opacity: 1; animation: gasMove .7s linear infinite; }
-@keyframes gasMove { to { stroke-dashoffset: -22; } }
+.gas-band { fill: none; stroke: #f59e0b; stroke-width: 12; stroke-linecap: round; opacity: 0; transition: opacity .6s ease; }
+.stage.gas-on .gas-band { opacity: .35; }
+
+/* 주황색 알갱이: 배관 경로를 따라 계속 이동 (SMIL) */
+.gas-grp { opacity: 0; transition: opacity .6s ease; }
+.stage.gas-on .gas-grp { opacity: 1; }
 </style>
 </head>
 <body>
@@ -566,7 +569,8 @@ ol.steps li { border-bottom: 1px solid var(--line); }
           <path id="s3top" class="sig" d="M675 40 V4"/>
           <path id="s3" class="sig" d="M675 4 H196 Q180 4 180 20 V287"/>
           <!-- 가스 흐름 (후드 → 엘보 → 팬): 주황색 알갱이가 계속 흐름 -->
-          <path class="gas-flow" d="M504 496 V249 H228"/>
+          <path class="gas-band" d="M504 496 V249 H228"/>
+          <g class="gas-grp"><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-0.00s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-0.00s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-0.30s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-0.30s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-0.60s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-0.60s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-0.90s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-0.90s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-1.20s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-1.20s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-1.50s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-1.50s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-1.80s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-1.80s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-2.10s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-2.10s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-2.40s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-2.40s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-2.70s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-2.70s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-3.00s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-3.00s"/></circle><circle r="4.5" fill="#ffb020"><animateMotion dur="3.6s" repeatCount="indefinite" begin="-3.30s" path="M504 496 V249 H228"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.88;1" dur="3.6s" repeatCount="indefinite" begin="-3.30s"/></circle></g>
           <g>
           </g>
           <!-- 라벨 -->
