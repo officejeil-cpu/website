@@ -424,6 +424,9 @@ ol.steps li { border-bottom: 1px solid var(--line); }
 
 /* 숨김 항목은 확실히 숨김 (다른 스타일이 hidden을 덮지 않도록) */
 [hidden] { display: none !important; }
+
+/* 반복 시작: 부품을 지연 없이 즉시 흩어 놓음 */
+.stage.reset .pf, .stage.reset .hwwrap, .stage.reset .pimg, .stage.reset .ph, .stage.reset .lcd, .stage.reset .drum-mask { transition-delay: 0s !important; transition-duration: .6s !important; }
 </style>
 </head>
 <body>
@@ -775,21 +778,21 @@ ol.steps li { border-bottom: 1px solid var(--line); }
   }
   function buildTimeline() {
     return [
-      [150, function () { stage.classList.add('drawn'); }],
-      [400, function () { stage.classList.add('placed'); }],
-      [2000, function () { stage.querySelectorAll('.hwwrap[data-part="0"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [2700, function () { stage.querySelectorAll('.hwwrap[data-part="aes"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [3100, function () { stage.querySelectorAll('.hwwrap[data-part="1"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [4200, function () { stage.querySelectorAll('.hwwrap[data-part="2"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [5300, function () { stage.querySelectorAll('.hwwrap[data-part="3"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [6400, function () { stage.querySelectorAll('.hwwrap[data-part="4"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [7500, function () { stage.querySelectorAll('.hwwrap[data-part="5"]').forEach(function (e) { e.classList.add('gone'); }); }],
-      [8400, function () { stage.classList.add('unit'); if (window.startLcd) window.startLcd(); }],
-      [9800, function () { setStep(1); stage.classList.add('gas-on', 's1-on', 's2-on'); }],
-      [11400, function () { setStep(2); stage.classList.add('sensor-on', 'e12-on'); stage.classList.remove('gas-on'); }],
-      [13000, function () { setStep(3); stage.classList.add('s3-on', 'fan-on'); stage.classList.remove('sensor-on', 'e12-on'); }],
-      [14800, function () { stage.classList.add('filled'); stepText.textContent = steps[4]; }],
-      [16600, function () { finishStage(); }]
+      [1300, function () { stage.classList.add('drawn'); }],
+      [1600, function () { stage.classList.add('placed'); }],
+      [3200, function () { stage.querySelectorAll('.hwwrap[data-part="0"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [3900, function () { stage.querySelectorAll('.hwwrap[data-part="aes"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [4300, function () { stage.querySelectorAll('.hwwrap[data-part="1"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [5400, function () { stage.querySelectorAll('.hwwrap[data-part="2"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [6500, function () { stage.querySelectorAll('.hwwrap[data-part="3"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [7600, function () { stage.querySelectorAll('.hwwrap[data-part="4"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [8700, function () { stage.querySelectorAll('.hwwrap[data-part="5"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [9600, function () { stage.classList.add('unit'); if (window.startLcd) window.startLcd(); }],
+      [11000, function () { setStep(1); stage.classList.add('gas-on', 's1-on', 's2-on'); }],
+      [12600, function () { setStep(2); stage.classList.add('sensor-on', 'e12-on'); stage.classList.remove('gas-on'); }],
+      [14200, function () { setStep(3); stage.classList.add('s3-on', 'fan-on'); stage.classList.remove('sensor-on', 'e12-on'); }],
+      [16000, function () { stage.classList.add('filled'); stepText.textContent = steps[4]; }],
+      [17800, function () { finishStage(); }]
     ];
   }
 
@@ -797,7 +800,7 @@ ol.steps li { border-bottom: 1px solid var(--line); }
     clearTimeout(loopTimer); loopTimer = null;
     clearInterval(tick); tick = null;
     finished = false; idx = 0; elapsed = 0;
-    stage.className = 'stage';
+    stage.className = 'stage reset';
     if (window.stopLcd) window.stopLcd();
     setStep(0);
     timeline = buildTimeline();
