@@ -1,355 +1,780 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEIL SteriSafe</title>
-    <!-- FontAwesome 아이콘 사용을 위한 CDN 추가 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            background: linear-gradient(to bottom, #ffffff 0%, #ffffff 20%, #eef1f5 60%, #d8dde4 100%);
-            background-attachment: fixed;
-            color: #1e293b;
-            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>AES 잔류가스 배기 시스템</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: text column, one wide stage for the animation, then reference sections.
+   Stage runs blueprint (navy) -> parts take color (light) -> finished photo.
+   Palette: paper ground, navy ink, navy blueprint, brass accent, gas orange for the hazard path. */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #14213d;
+  --text: #374151;
+  --muted: #6b7280;
+  --line: #e2e5ea;
+  --stage: #0b2340;
+  --stage-light: #eef1f5;
+  --blue: #7dd3fc;
+  --gas: #f59e6b;
+  --accent: #8a6d3b;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.wrap { max-width: 960px; margin: 0 auto; }
+h1, h2, h3 { color: var(--ink); text-wrap: balance; margin: 0; }
+h1 { font-size: 30px; line-height: 1.3; letter-spacing: -0.5px; }
+h2 { font-size: 22px; letter-spacing: -0.3px; }
+h3 { font-size: 16px; }
+p { margin: 0; }
+.eyebrow { font-size: 12px; letter-spacing: 1.5px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+section { padding-block: 56px 0; }
+.sub { margin-top: 8px; color: var(--muted); font-size: 14px; }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 30px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            box-sizing: border-box;
-            width: 100%;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo img {
-            height: 36px;
-            display: block;
-        }
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #334155;
-            letter-spacing: -0.5px;
-            white-space: nowrap;
-        }
+/* Header */
+.hero { padding-top: 56px; }
+.hero p.lead { margin-top: 14px; font-size: 16px; max-width: 640px; }
 
-        nav {
-            display: flex;
-            align-items: center;
-        }
-        nav a {
-            color: #475569;
-            text-decoration: none;
-            margin-left: 24px;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.2s;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        nav a:hover {
-            color: #2563eb;
-        }
+/* Stage */
+.stage-wrap { margin-top: 28px; display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+.stage {
+  position: relative;
+  background: var(--stage);
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 906 / 835;
+  max-width: 100%;
+  transition: background 1.4s ease;
+}
+.stage.filled { background-color: #dfeaf5; }
+.stage svg { display: block; width: 100%; height: 100%; transition: opacity 1s ease; }
+.stage.assembled svg { opacity: 0; }
+.stage img#photo {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; opacity: 0; transition: opacity 1.4s ease; pointer-events: none;
+}
+.stage.assembled img#photo { opacity: 1; }
+.grid-bg { transition: opacity 1.2s ease; }
+.stage.paused, .stage.paused * { animation-play-state: paused !important; }
+.stage.filled .grid-bg { opacity: 0; }
 
-        /* 공통 모달 스타일 */
-        .company-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
-        .company-content { background: #ffffff; width: 90%; max-width: 820px; max-height: 82vh; overflow-y: auto; padding: 40px; border-radius: 16px; position: relative; line-height: 1.8; color: #334155; box-shadow: 0 20px 40px rgba(0,0,0,0.15); box-sizing: border-box; }
-        .modal-header-title { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 20px; letter-spacing: -0.5px; word-break: keep-all; }
-        .company-section-title { font-size: 17px; font-weight: 700; color: #1e293b; margin-top: 30px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; word-break: keep-all; }
-        .company-section-title::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: #2563eb; border-radius: 2px; flex-shrink: 0; }
-        .company-content p { font-size: 14px; color: #475569; margin-bottom: 15px; word-break: keep-all; }
-        .solution-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 15px; background: #f8fafc; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin: 15px 0; }
-        .solution-item { font-size: 13px; color: #334155; font-weight: 600; display: flex; align-items: center; gap: 8px; word-break: keep-all; }
-        .solution-item::before { content: "▪"; color: #2563eb; font-size: 12px; }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 26px; cursor: pointer; border: none; background: none; color: #94a3b8; }
-        .close-btn:hover { color: #0f172a; }
+/* Parts: outline first (blueprint), then fill (color) */
+.part {
+  fill: none; fill-opacity: 0;
+  stroke: var(--blue); stroke-width: 2;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.2s ease, fill-opacity 1.2s ease, stroke 1.2s ease;
+}
+.part.thin { stroke-width: 1.2; }
+.stage.drawn .part { stroke-dashoffset: 0; }
+.stage.filled .part { fill-opacity: 1; stroke: #475569; }
+.stage.filled .part.tube { stroke: #94a3b8; }
+.stage.filled .part.floor { stroke: #94a3b8; }
+.stage.filled .part.glow { fill-opacity: 1; }
 
-        .main-content { display: flex; justify-content: space-between; align-items: center; padding: 30px; flex-grow: 1; max-width: 1450px; margin: 0 auto; width: 100%; box-sizing: border-box; gap: 30px; }
-        .text-section { flex: 1; max-width: 550px; text-align: right; }
-        .text-section h1 { font-size: 34px; line-height: 1.3; margin-bottom: 15px; font-weight: 700; color: #0f172a; word-break: keep-all; }
-        .text-section p { color: #334155; font-size: 15px; line-height: 1.6; margin-bottom: 25px; word-break: keep-all; }
-        .btn-group { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
-        .btn-red { background-color: #dc2626; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; white-space: nowrap; }
-        .btn-blue { background-color: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; white-space: nowrap; }
-        .equipment-section { flex: 1.3; max-width: 715px; background-color: rgba(255, 255, 255, 0.95); border: 1px solid #cbd5e1; border-radius: 10px; padding: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: center; box-sizing: border-box; }
-        .equipment-section img { max-width: 100%; height: auto; max-height: 380px; border-radius: 6px; display: block; margin: 0 auto; }
+.lbl { fill: #cfe8ff; font-size: 20px; opacity: 0; transition: opacity 0.6s ease, fill 1.2s ease; font-family: inherit; }
+.stage.drawn .lbl { opacity: 1; }
+.stage.filled .lbl { fill: #14213d; }
+.stage.filled .lbl.lbl-light { fill: #475569; }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; box-sizing: border-box; padding: 20px; }
-        .modal-box { background-color: #ffffff; padding: 30px 20px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); position: relative; text-align: center; box-sizing: border-box; }
-        .mail-btn { display: block; background-color: #03c75a; color: white; padding: 12px 24px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; width: 100%; margin-top: 20px; box-sizing: border-box; }
+.pt { fill: #cfe8ff; transition: fill 0.4s; }
+.stage.filled .pt { fill: #475569; }
+.stage.sensor-on .pt { fill: var(--gas); }
 
-        /* 푸터 원래 정렬 스타일 복구 */
-        footer { background-color: #d8dde4; color: #475569; border-top: 1px solid #cbd5e1; padding: 15px 30px; font-size: 12px; box-sizing: border-box; width: 100%; }
-        .partner-logos { display: flex; justify-content: space-around; margin-bottom: 12px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; font-weight: bold; font-size: 11px; flex-wrap: wrap; gap: 8px; text-align: center; }
-        
-        .footer-info { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .footer-info-right { display: flex; flex-direction: column; gap: 6px; }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: minmax(320px, auto) 3cm minmax(140px, auto);
-            align-items: center;
-        }
-        
-        .footer-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .footer-item i { color: #2563eb; width: 18px; text-align: center; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; }
-        
-        .email-link { cursor: pointer; text-decoration: none; color: #475569; }
-        .email-link:hover { color: #2563eb; text-decoration: underline; }
+.sig { fill: none; stroke: var(--blue); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0.25; transition: opacity 0.4s; }
+.stage.filled .sig { stroke: #0ea5e9; }
+.stage.s1-on #s1, .stage.s2-on #s2, .stage.s3-on #s3 { opacity: 1; animation: flow 0.8s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -12; } }
 
-        /* ================= 모바일 반응형 스타일 (태블릿 및 스마트폰) ================= */
-        @media screen and (max-width: 950px) {
-            header {
-                flex-direction: column;
-                padding: 15px 15px;
-                gap: 12px;
-            }
-            .logo-text {
-                font-size: 18px;
-            }
-            nav {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 6px 12px;
-                width: 100%;
-            }
-            nav a {
-                margin-left: 0;
-                font-size: 13px;
-            }
-            .main-content {
-                flex-direction: column-reverse;
-                padding: 20px 15px;
-                gap: 20px;
-                text-align: center;
-            }
-            .text-section {
-                max-width: 100%;
-                text-align: center;
-            }
-            .text-section h1 {
-                font-size: 22px;
-                word-break: keep-all;
-            }
-            .text-section p {
-                font-size: 14px;
-                word-break: keep-all;
-            }
-            .btn-group {
-                justify-content: center;
-            }
-            .equipment-section {
-                max-width: 100%;
-                padding: 10px;
-            }
-            .company-content {
-                width: 92%;
-                padding: 25px 20px;
-                max-height: 85vh;
-            }
-            .solution-grid {
-                grid-template-columns: 1fr;
-            }
-            footer {
-                padding: 15px;
-            }
-            .footer-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .footer-grid {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                width: 100%;
-            }
-            .footer-item {
-                white-space: normal;
-                word-break: break-all;
-            }
-        }
-    </style>
+#sensorG, #recvG { transform-box: fill-box; transform-origin: center; }
+.stage.sensor-on #sensorG { animation: pulse 1s ease-in-out infinite; }
+.stage.recv-on #recvG { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+
+#exhaustArrow { opacity: 0; transition: opacity 0.4s; }
+.stage.fan-on #exhaustArrow { opacity: 1; animation: rise 0.9s linear infinite; }
+@keyframes rise { 0% { transform: translateY(6px); opacity: 0.2; } 100% { transform: translateY(-14px); opacity: 1; } }
+
+.gas { fill: var(--gas); opacity: 0; transition: opacity 0.4s; }
+.stage.gas-on .gas { opacity: 1; }
+
+.badge { opacity: 0; transition: opacity 0.4s ease; }
+.badge.on { opacity: 1; }
+.badge text { font-family: inherit; }
+.bp { transition: opacity 1.2s ease; }
+
+/* Step list */
+.side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.now { background: var(--surface); border: 1px solid var(--line); padding: 16px 18px; min-height: 116px; }
+.now .k { font-size: 12px; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+.now p { margin-top: 6px; color: var(--ink); font-weight: 500; }
+ol.steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+ol.steps li {
+  display: grid; grid-template-columns: 26px 1fr; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--line);
+  color: var(--muted); font-size: 14px; transition: color 0.3s;
+}
+ol.steps li .n {
+  width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line);
+  display: grid; place-items: center; font-size: 12px; font-weight: 700; margin-top: 1px;
+}
+ol.steps li.active { color: var(--ink); font-weight: 500; }
+ol.steps li.active .n { background: var(--gas); border-color: var(--gas); color: var(--stage); }
+ol.steps li.done { color: var(--text); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+button {
+  font: inherit; font-size: 14px; padding: 10px 16px; cursor: pointer;
+  background: var(--ink); color: #fff; border: 1px solid var(--ink);
+}
+button.ghost { background: transparent; color: var(--ink); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Cards */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.card { background: var(--surface); border: 1px solid var(--line); padding: 22px; min-width: 0; }
+.card.hl { border-top: 3px solid var(--accent); }
+.card p + p { margin-top: 10px; }
+.card .tag { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
+ul.plain { margin: 12px 0 0; padding-left: 18px; }
+ul.plain li { margin: 4px 0; }
+
+/* Photos */
+.photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+.photos figure { margin: 0; background: var(--surface); border: 1px solid var(--line); min-width: 0; }
+.photos img { width: 100%; height: 220px; object-fit: cover; display: block; }
+.photos figcaption { padding: 12px 14px; font-size: 14px; color: var(--ink); font-weight: 500; }
+
+/* Parts */
+.parts { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; margin-top: 24px; }
+.parts div { padding: 12px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.parts div b { color: var(--ink); font-weight: 500; }
+.parts div span { display: block; font-size: 13px; color: var(--muted); }
+.flag { display: inline-block; font-size: 11px; color: var(--accent); border: 1px solid var(--accent); padding: 0 6px; margin-left: 6px; vertical-align: 1px; }
+
+.table-box { overflow-x: auto; margin-top: 24px; background: var(--surface); border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14px; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: #eef0f3; color: var(--ink); font-weight: 700; }
+td:first-child { color: var(--ink); }
+
+.note { margin-top: 28px; padding: 18px 20px; background: var(--surface); border-left: 3px solid var(--accent); color: var(--ink); }
+footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+
+/* Phone */
+@media (max-width: 860px) {
+  .stage-wrap { grid-template-columns: 1fr; }
+  .cols { grid-template-columns: 1fr; }
+  .photos { grid-template-columns: 1fr; }
+  .photos img { height: auto; aspect-ratio: 4 / 3; }
+  .parts { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) {
+  h1 { font-size: 24px; }
+  .hero { padding-top: 40px; }
+  section { padding-top: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* 부품 이미지 조립 */
+.stage { background-color: #dfeaf5; background-image: linear-gradient(rgba(58,110,170,.22) 1px, transparent 1px), linear-gradient(90deg, rgba(58,110,170,.22) 1px, transparent 1px), linear-gradient(rgba(58,110,170,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(58,110,170,.10) 1px, transparent 1px); background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px; }
+/* 설계 청사진 눈금: 완성 장면에서도 유지 (보조 눈금 + 주 눈금) */
+.stage.filled .bp-bg { opacity: .07; }
+.stage svg.overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ph { position: absolute; border: 1.5px dashed #7dd3fc; opacity: 0; transition: opacity .8s ease; }
+.stage.drawn .ph { opacity: .9; }
+.stage.placed .ph { opacity: 0; }
+.pimg { position: absolute; display: block; opacity: 0; transform: translate(var(--dx,0px), var(--dy,0px)); transition: opacity 1s ease, transform 1.4s cubic-bezier(.7,0,.2,1); transition-delay: var(--d,0s); }
+.stage.placed .pimg { opacity: 1; transform: none; }
+.stage.assembled .pimg { opacity: 0; }
+.stage.assembled img#photo { opacity: 1; }
+.stage.paused .pimg { transition-play-state: paused; }
+
+/* 빨간색 신호선 */
+#s1, #s2, #s3 { stroke: #ef4444; stroke-width: 2.5; }
+.stage.filled #s1, .stage.filled #s2, .stage.filled #s3 { stroke: #dc2626; }
+
+#s4 { stroke: #ef4444; stroke-width: 2.5; }
+.stage.filled #s4 { stroke: #dc2626; }
+.stage.s1-on #s4 { opacity: 1; animation: flow 0.8s linear infinite; }
+
+/* 공압튜브: 신호 흐름 점선이 아닌 굵은 빨간 실선 */
+#s1, #s2, #s4 { stroke: #ef4444; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: none; opacity: 0; transition: opacity .6s ease; }
+.stage.filled #s1, .stage.filled #s2, .stage.filled #s4 { stroke: #dc2626; }
+.stage.s1-on #s1, .stage.s1-on #s4, .stage.s2-on #s2 { opacity: 1; animation: none; }
+
+/* 전기 신호: 1번 감지기 → 2번 AES (파란 점선) */
+.stage.e12-on #e12 { opacity: 1; animation: flow 0.8s linear infinite; }
+
+/* 전기 신호선: 부드럽게 흐르는 파란 점선 (튜브와 구분) */
+@keyframes flowS { to { stroke-dashoffset: -12; } }
+#s3, #e12, #e31 { stroke: #38bdf8; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; }
+.stage.filled #s3, .stage.filled #e12 { stroke: #0284c7; }
+.stage.s3-on #s3 { opacity: 1; animation: flowS 1.2s linear infinite; }
+.stage.e12-on #e12 { opacity: 1; animation: flowS 1.2s linear infinite; }
+
+/* 3번 후드 → 1번 감지기 전기 신호선 (파란 점선) */
+#e31 { stroke: #38bdf8; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; }
+.stage.filled #e31 { stroke: #0284c7; }
+.stage.s1-on #e31 { opacity: 1; animation: flowS 1.2s linear infinite; }
+
+/* 2번 위쪽 연결: 실선으로 확실히 표시 (4번 공통선과 같은 높이) */
+#s3top { stroke: #38bdf8; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 2 10; opacity: 0; }
+.stage.s3-on #s3top { opacity: 1; animation: flowS 1.2s linear infinite; }
+.stage.filled #s3top { stroke: #0284c7; }
+
+/* 조각 → 결합 */
+.ph { transition: opacity .6s ease var(--d, 0s); }
+.pimg { transform: translate(var(--dx,0px), var(--dy,0px)) scale(.6) rotate(-6deg); opacity: 0; transition: opacity .8s ease var(--d,0s), transform 1.6s cubic-bezier(.2,.8,.2,1) var(--d,0s); }
+.stage.placed .pimg { opacity: 1; transform: none; }
+
+/* 부품 결합 완료 → 하나의 AES 묶음 */
+.unit-frame { position: absolute; left: 3%; top: 2%; width: 94%; height: 94%; border: 1.5px dashed #7dd3fc; border-radius: 18px; opacity: 0; transition: opacity 1s ease, border-color 1.2s ease; pointer-events: none; }
+.stage.unit .unit-frame { opacity: .85; }
+.stage.filled .unit-frame { border-color: #0284c7; }
+
+/* 해체 → 조립: 조각과 볼트가 흩어진 상태에서 제자리로 */
+.asm { position: absolute; }
+.asm .sl { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; opacity: 0; transform: translate(var(--sx,0px), var(--sy,0px)) rotate(var(--sr,0deg)); transition: opacity .6s ease var(--d,0s), transform 1.4s cubic-bezier(.2,.8,.2,1) var(--d,0s); }
+.asm .bolt { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; opacity: 0; transform: translate(var(--bx,0px), var(--by,0px)) rotate(var(--br,0deg)) scale(.4); transition: opacity .4s ease var(--d,0s), transform 1.1s cubic-bezier(.2,.8,.2,1) var(--d,0s); }
+.stage.placed .asm .sl, .stage.placed .asm .bolt { opacity: 1; transform: none; }
+.stage.placed .asm .bolt { transform: none; }
+.stage.filled .asm .sl { filter: drop-shadow(0 0 0 transparent); }
+
+/* 공압튜브: 진행 방향(분기점 → 목적지)으로 길어지며 그려짐 */
+#s1, #s2, #s4 { opacity: 1; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1); }
+.stage.s1-on #s1, .stage.s1-on #s4, .stage.s2-on #s2 { opacity: 1; animation: none; stroke-dashoffset: 0; }
+#s1, #s4 { transition-delay: .5s; }
+
+/* H-100 포트 → 짧은 줄기 → T자 분기 → 후드 / 바닥 (같은 청색 공압튜브) */
+#s0, #s1, #s4 { stroke: #38bdf8; opacity: 1; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1); }
+.stage.s1-on #s0, .stage.s1-on #s1, .stage.s1-on #s4 { stroke-dashoffset: 0; }
+.stage.filled #s0, .stage.filled #s1, .stage.filled #s4 { stroke: #0284c7; }
+
+/* 입체 공압튜브 (3겹 원통 느낌) */
+.tl { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1); }
+.stage.s1-on .tb-s0 .tl, .stage.s1-on .tb-s1 .tl, .stage.s1-on .tb-s4 .tl, .stage.s2-on .tb-s2 .tl { stroke-dashoffset: 0; }
+.stage.s1-on .tb-s1 .tl, .stage.s1-on .tb-s4 .tl { transition-delay: .5s; }
+/* 조립 볼트는 완성 후 사라짐 */
+.stage.filled .asm .bolt { opacity: 0; }
+
+/* 실제 배관처럼: 그림자, 이음쇠 표시 */
+.tube { filter: drop-shadow(0 2px 2px rgba(0,0,0,.45)); }
+.fit { opacity: 0; transition: opacity .6s ease .9s; }
+.stage.s1-on .fit { opacity: 1; }
+
+/* 완성 사진 보기: 전환 지연 없이 바로 완성 상태 */
+.stage.snap, .stage.snap * { transition: none !important; }
+
+/* 조립 볼트: 각 부품이 제자리에 들어가면 그 부품의 볼트만 사라짐 */
+.asm.gone .bolt { opacity: 0 !important; transition: opacity .4s ease !important; }
+
+/* 노란 먼지: 플랫덕트 입구로 계속 흘러 들어감 */
+.dust { fill: #fef08a; opacity: 0; filter: drop-shadow(0 0 3px rgba(253,224,71,1)) drop-shadow(0 0 1px #fde047); animation: dustFlow linear infinite; }
+@keyframes dustFlow {
+  0%   { transform: translate(var(--x0), var(--y0)) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translate(calc(var(--x0) + var(--x1)), calc(var(--y0) + var(--y1))) scale(.5); opacity: 0; }
+}
+
+/* 부품 하나씩 조립: 작은 부품(와셔·볼트·너트)이 흩어졌다가 제자리로, 그 뒤 본체가 맞춰짐 */
+.pf { position: absolute; opacity: 0; transform: translate(var(--dx,0px), var(--dy,0px)) rotate(var(--dr,0deg)) scale(.85); transition: opacity .9s ease var(--d,0s), transform 1.4s cubic-bezier(.2,.8,.2,1) var(--d,0s); }
+.stage.placed .pf { opacity: 1; transform: none; }
+.hwwrap { position: absolute; width: 3.2%; aspect-ratio: 1 / 1; margin: -1.6% 0 0 -1.6%; opacity: 0; transform: translate(var(--hx,0px), var(--hy,0px)) rotate(var(--hr,0deg)) scale(.6); transition: opacity .45s ease var(--d,0s), transform 1.1s cubic-bezier(.2,.8,.2,1) var(--d,0s); pointer-events: none; }
+.hwwrap svg { width: 100%; height: 100%; display: block; }
+.stage.placed .hwwrap { opacity: 1; transform: none; }
+.hwwrap.gone { opacity: 0 !important; transition: opacity .4s ease !important; }
+.stage.filled .pf { opacity: 1; }
+
+/* 받침(아래 판)과 케이스(위 커버): 금속 질감의 작은 부품 */
+.piece { border-radius: 3px; }
+.piece.base { background: linear-gradient(180deg, #eef3f8 0%, #b5c2d1 45%, #5d6c80 100%); border: 1px solid #34445a; box-shadow: inset 0 1px 0 rgba(255,255,255,.7); }
+.piece.case { background: linear-gradient(90deg, #f4f7fb 0%, #c3cfdc 50%, #7d8ca0 100%); border: 1px solid #34445a; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+
+/* AES 내부 부품: 상자 안에 들어가 그대로 남음 */
+.hwwrap[data-part="aes"] { transition: opacity .6s ease var(--d,0s), transform 1.2s cubic-bezier(.2,.8,.2,1) var(--d,0s) !important; }
+
+/* (구) 날개 */
+.impeller { position: absolute; transform: translate(-50%,-50%); opacity: 0; transition: opacity 1s ease 2.9s; animation: impSpin 1.6s linear infinite; backface-visibility: visible; pointer-events: none; }
+.stage.placed .impeller { opacity: 1; }
+@keyframes impSpin { from { transform: translate(-50%,-50%) perspective(260px) rotateX(0deg); } to { transform: translate(-50%,-50%) perspective(260px) rotateX(360deg); } }
+
+/* 원통형 팬: 드럼 날개가 축(가로)을 중심으로 계속 회전 */
+.stage { container-type: inline-size; }
+.drum-mask { position: absolute; transform: translate(-50%,-50%); aspect-ratio: 1; border-radius: 50%; overflow: hidden; opacity: 0; transition: opacity 1s ease 2.9s; pointer-events: none; background: radial-gradient(circle, #0b1a30 55%, #071426 100%); }
+.stage.placed .drum-mask { opacity: 1; }
+.drum { position: absolute; inset: 0; transform-style: preserve-3d; --rr: 6.4cqw; animation: none; }
+.stage.unit .drum { animation: drumSpin 8s linear infinite; }
+.slat { position: absolute; left: 0; top: 50%; width: 100%; height: 1.1cqw; margin-top: -0.55cqw; border-radius: 1cqw; background: linear-gradient(180deg, #e6f4ff 0%, #5fb2f0 45%, #1d5fa8 100%); box-shadow: 0 0 .4cqw rgba(127,211,252,.6); backface-visibility: visible; }
+@keyframes drumSpin { from { transform: rotateX(0deg); } to { transform: rotateX(360deg); } }
+@media (prefers-reduced-motion: reduce) { .drum { animation: none; } }
+
+/* AES 오른쪽 끝 포트에서 기존 공압튜브로 분기 */
+.stage.s1-on .tb-s5 .tl { stroke-dashoffset: 0; }
+.tb-s5 .tl { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1) .8s; }
+
+/* 흐린 청사진 배경: 애니메이션 뒤에 깔림 */
+.bp-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: .07; pointer-events: none; z-index: 0; }
+.stage > *:not(.bp-bg) { position: relative; z-index: 1; }
+.stage > .pf, .stage > .hwwrap, .stage > .drum-mask, .stage > .ph, .stage > .unit-frame { position: absolute; }
+.stage > svg { position: absolute; }
+
+/* 수신부 표시창: 0.0 → 20.0 (0.1 단위), 0.3초 간격 반복 */
+.lcd { position: absolute; z-index: 3; background: #04101f; border-radius: .3cqw; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: inset 0 0 .4cqw rgba(127,211,252,.5); opacity: 0; transition: opacity 1s ease; }
+.stage.unit .lcd { opacity: 1; }
+#lcdNum { color: #7fe3ff; font-family: 'Menlo','Consolas',monospace; font-weight: 700; font-size: 2.2cqw; font-variant-numeric: tabular-nums; text-shadow: 0 0 .5cqw rgba(127,227,255,.8); }
+
+/* 바닥: 바닥선 + 끝까지 이어진 빗살무늬 */
+.floor-hatch { opacity: 0; transition: opacity 1s ease .4s; }
+.stage.drawn .floor-hatch { opacity: .75; }
+
+/* 밝은 배경에서 AES 강조: 뒤쪽 글로우 */
+.aes-glow { position: absolute; left: 60%; top: 2%; width: 26%; height: 36%; border-radius: 40px; background: radial-gradient(closest-side, rgba(255,255,255,.95), rgba(255,255,255,.55) 60%, rgba(255,255,255,0) 100%); z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1.2s ease 1s; }
+.stage.unit .aes-glow { opacity: 1; }
+
+/* 표시창은 수신부 화면 위치에 고정 */
+.stage > .lcd, .stage > .aes-glow, .stage > .ph { position: absolute !important; }
+/* 홈페이지 공통 */
+.site-head { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e2e5ea; }
+.site-wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+.site-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #14213d; font-weight: 700; font-size: 18px; }
+.site-brand img { height: 34px; }
+.site-head .site-wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.site-nav a { color: #374151; text-decoration: none; font-size: 14px; font-weight: 500; padding: 4px 0; }
+.site-nav a:hover { color: #14213d; text-decoration: underline; }
+.site-hero { background: #14213d; color: #fff; padding: 84px 0; }
+.site-hero h1 { font-size: 36px; line-height: 1.35; margin: 12px 0 18px; color: #fff; word-break: keep-all; }
+.site-hero .lead { color: #cbd5e1; max-width: 640px; font-size: 16px; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.hbtn { display: inline-block; padding: 12px 24px; background: #fff; color: #14213d; text-decoration: none; font-weight: 600; font-size: 15px; }
+.hbtn.ghost { background: transparent; color: #fff; border: 1px solid #94a3b8; }
+.site-sec { padding: 72px 0; border-top: 1px solid #e2e5ea; }
+.site-sec h2 { font-size: 26px; color: #14213d; margin: 8px 0 14px; word-break: keep-all; }
+.site-sec > .site-wrap > .lead { max-width: 720px; word-break: keep-all; }
+.site-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+.site-card { background: #fff; border: 1px solid #e2e5ea; padding: 22px; }
+.site-card h3 { margin: 0 0 8px; font-size: 16px; color: #14213d; }
+.site-card p { margin: 0; word-break: keep-all; }
+.prod-list { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.prod-list li { padding: 14px 0; border-bottom: 1px solid #e2e5ea; }
+.prod-list b { display: block; color: #14213d; font-weight: 600; }
+.prod-list span { font-size: 14px; color: #6b7280; word-break: keep-all; }
+.contact-list { margin: 24px 0 0; border-top: 2px solid #14213d; }
+.contact-list div { display: grid; grid-template-columns: 90px 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid #e2e5ea; }
+.contact-list dt { color: #6b7280; font-weight: 600; }
+.contact-list dd { margin: 0; color: #14213d; }
+.site-foot { background: #0b1728; color: #94a3b8; font-size: 13px; padding: 28px 20px; }
+.site-foot p { margin: 4px 0; }
+#aes { padding-top: 72px; }
+@media (max-width: 760px) {
+  .site-cols, .prod-list { grid-template-columns: 1fr; }
+  .site-hero h1 { font-size: 26px; }
+  .site-hero { padding: 56px 0; }
+  .site-sec { padding: 52px 0; }
+}
+</style>
 </head>
 <body>
+<header class="site-head" id="top">
+  <div class="site-wrap">
+    <a class="site-brand" href="#top"><img src="logo.png" alt="JEIL 로고"><span>제일멸균안전</span></a>
+    <nav class="site-nav">
+      <a href="#about">회사소개</a>
+      <a href="#aes">멸균안전기술</a>
+      <a href="#patent">특허기술</a>
+      <a href="#products">제품소개</a>
+      <a href="#contact">AS접수</a>
+    </nav>
+  </div>
+</header>
+<section class="site-hero">
+  <div class="site-wrap">
+    <p class="eyebrow">JEIL SteriSafe</p>
+    <h1>의료기관 멸균 및<br>멸균안전 전문 기술 솔루션</h1>
+    <p class="lead">JEIL은 EO 및 과산화수소 멸균환경의 안전성을 극대화하기 위한 장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
+    <div class="hero-btns"><a class="hbtn" href="#aes">멸균안전기술 보기</a><a class="hbtn ghost" href="#contact">문의하기</a></div>
+  </div>
+</section>
+<div class="wrap">
 
-    <header>
-        <div class="logo-container">
-            <div class="logo"><img src="logo.png" alt="JEIL Logo"></div>
-            <span class="logo-text">제일멸균안전</span>
-        </div>
-        <nav>
-            <a onclick="openCompanyModal()">회사소개</a>
-            <a onclick="openTechModal()">멸균안전기술</a>
-            <a href="#">특허기술</a>
-            <a href="#">제품소개</a>
-            <a onclick="openModal('info@jeilss.co.kr')">AS접수</a>
-        </nav>
-    </header>
+  <header class="hero">
+    <p class="eyebrow">제일멸균안전 · AES</p>
+    <h1>AES 잔류가스 배기 시스템</h1>
+    <p class="lead">멸균 후 남은 잔류 유독가스를 바닥 30cm와 멸균기 상부에서 함께 배출해, 상승기류로 인한 작업자 피해를 줄입니다.</p>
+  </header>
 
-    <!-- 회사소개 모달 -->
-    <div id="companyModal" class="company-modal" onclick="closeCompanyModal()">
-        <div class="company-content" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeCompanyModal()">&times;</button>
-            <div class="modal-header-title">의료현장의 안전을 생각하는 제일(JEIL)</div>
-
-            <p><strong>안녕하세요. 제일(JEIL)입니다.</strong><br>
-            제일은 의료기관 및 산업현장에서 사용되는 멸균기, Biological Indicator(BI), Chemical Indicator(CI), Process Challenge Device(PCD) 등 양질의 멸균 관련 제품을 공급하고, 보다 안전한 멸균환경을 위한 산업보건 솔루션을 제안하는 전문기업입니다.</p>
-
-            <div class="company-section-title">왜 제일은 새로운 솔루션을 제안하는가?</div>
-            <p>멸균은 의료기관에서 가장 중요한 감염관리 과정 중 하나입니다.<br>
-            그러나 지금까지의 멸균 모니터링은 멸균이 정상적으로 이루어졌는지 확인하는 것에 주로 초점이 맞춰져 있었으며, 멸균 후 발생할 수 있는 잔류 유해가스에 대한 작업자 노출 관리는 상대적으로 관심을 받지 못한 분야였습니다.</p>
-            <p>제일은 이러한 부분에 주목했습니다. 멸균의 성공 여부를 확인하는 것만큼 중요한 것은 멸균 작업을 수행하는 의료진의 안전이라고 생각하기 때문입니다.</p>
-
-            <div class="company-section-title">제일이 제안하는 솔루션</div>
-            <p>제일은 의료현장에서 사용되는 다양한 멸균 관련 제품과 함께 작업자의 안전을 위한 솔루션을 제공합니다.</p>
-            
-            <div class="solution-grid">
-                <div class="solution-item">양질의 멸균기 공급</div>
-                <div class="solution-item">잔류유독가스 자동배기시스템</div>
-                <div class="solution-item">Biological Indicator (BI)</div>
-                <div class="solution-item">가스감지기 및 모니터링 시스템</div>
-                <div class="solution-item">Chemical Indicator (CI)</div>
-                <div class="solution-item">의료기관 맞춤형 산업보건 솔루션</div>
-                <div class="solution-item">Process Challenge Device (PCD)</div>
-            </div>
-            
-            <p style="font-size: 13px; color: #64748b; margin-top: 10px;">특히 EO(에틸렌옥사이드), 과산화수소(H₂O₂ Vapor) 등 멸균공정에서 발생할 수 있는 유해가스의 특성을 고려하여 보다 안전한 작업환경을 만들기 위한 다양한 기술을 연구하고 있습니다.</p>
-
-            <div class="company-section-title">제일은 다른 시각으로 접근합니다.</div>
-            <p>오랜 시간 동안 현장에서 직접 보고, 듣고, 고민하면서<br>
-            <strong style="color: #dc2626; font-weight: 700;">"왜 지금까지 이렇게 관리되어 왔을까?"</strong><br>
-            <strong style="color: #dc2626; font-weight: 700;">"더 안전한 방법은 없을까?"</strong><br>
-            라는 질문을 끊임없이 던져 왔습니다.<br>
-            기존의 방식에 머무르기보다 현장의 문제를 발견하고, 실질적인 해결책을 제안하는 것이 제일의 역할이라고 생각합니다.</p>
-
-            <div class="company-section-title">우리의 약속</div>
-            <p>좋은 제품을 공급하는 것에서 끝나지 않겠습니다.<br>
-            의료현장의 안전과 작업자의 건강을 함께 생각하며, 고객이 신뢰할 수 있는 멸균 솔루션 전문기업이 되겠습니다.</p>
-        </div>
+  <section class="site-sec" id="about">
+  <div class="site-wrap">
+    <p class="eyebrow">회사소개</p>
+    <h2>의료현장의 안전을 생각하는 제일(JEIL)</h2>
+    <p class="lead">안녕하세요. 제일(JEIL)입니다. 제일은 의료기관 및 산업현장에서 사용되는 멸균기, Biological Indicator(BI), Chemical Indicator(CI), Process Challenge Device(PCD) 등 양질의 멸균 관련 제품을 공급하고, 보다 안전한 멸균환경을 위한 산업보건 솔루션을 제안하는 전문기업입니다.</p>
+    <div class="site-cols">
+      <div class="site-card"><h3>왜 새로운 솔루션을 제안하는가</h3><p>멸균은 의료기관에서 가장 중요한 감염관리 과정 중 하나입니다. 그러나 지금까지의 멸균 모니터링은 멸균이 정상적으로 이루어졌는지 확인하는 데 초점이 맞춰져 있었고, 멸균 후 잔류 유해가스에 대한 작업자 노출 관리는 상대적으로 관심을 받지 못했습니다.</p></div>
+      <div class="site-card"><h3>다른 시각으로 접근합니다</h3><p>“왜 지금까지 이렇게 관리되어 왔을까?”, “더 안전한 방법은 없을까?”라는 질문을 던져 왔습니다. 멸균의 성공 여부만큼 중요한 것은 멸균 작업을 수행하는 의료진의 안전이라고 생각합니다.</p></div>
     </div>
+  </div>
+</section>
 
-    <!-- 멸균안전기술 모달 -->
-    <div id="techModal" class="company-modal" onclick="closeTechModal()">
-        <div class="company-content" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeTechModal()">&times;</button>
-            <div class="modal-header-title">멸균안전기술 동영상 안내</div>
-            <div style="text-align: center; margin-top: 15px;">
-                <video controls style="width: 100%; max-height: 350px; border-radius: 8px; background: #000;">
-                    <source src="sterilization-safety/gas-exposure-status/video.mp4" type="video/mp4">
-                    브라우저가 동영상 재생을 지원하지 않습니다.
-                </video>
-            </div>
-            <p style="margin-top: 15px; font-size: 14px; color: #475569; text-align: center;">
-                JEIL의 멸균안전 및 유해가스 자동배기 시스템 관련 기술 영상입니다.
-            </p>
-        </div>
-    </div>
+<section class="site-sec" id="aes">
+    <p class="eyebrow">멸균안전기술</p>
+    <h2 style="margin-top:8px;">구조 애니메이션</h2>
+    <p class="sub">흩어진 볼트와 조각이 모여 부품이 조립되고, 조립된 부품이 하나의 AES로 묶여 공기와 전기 신호가 흐르는 순서를 보여 줍니다. 그림은 개략도이며 실제 비율과 다를 수 있습니다.</p>
 
-    <div class="main-content">
-        <div class="text-section">
-            <h1>의료기관 멸균 및</br>멸균안전 전문 기술 솔루션</h1>
-            <p>JEIL은 EO 및 과산화수소 멸균환경의 안전성을</br>극대화하기 위한 장비와 기술을 연구·개발·설치하는 전문 기업입니다.</p>
-            <div class="btn-group">
-                <a href="#" class="btn-red">자동배기시스템</a>
-                <a href="#" class="btn-blue">흡입식감지기</a>
-            </div>
-        </div>
-        <div class="equipment-section">
-            <img src="patent_img.png" alt="특허 기술 이미지">
-        </div>
-    </div>
-
-    <!-- AS 접수 모달 -->
-    <div id="asModal" class="modal-overlay">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <h3>빠른 문의 / AS 접수</h3>
-            <p><strong id="modalEmailText" style="color:#03c75a;">info@jeilss.co.kr</strong></p>
-            <p style="font-size: 13px; color: #64748b; margin-top: -10px; margin-bottom: 15px;">이메일 주소가 자동으로 복사됩니다.<br>메일 작성란에 그대로 붙여넣기(Ctrl+V) 하세요.</p>
-            <button class="mail-btn" onclick="openNaverMailAndCopy()">네이버 메일로 문의하기</button>
-        </div>
-    </div>
-
-    <footer>
-        <div class="partner-logos">
-            <span>JEIL STERISAFE</span> <span>MEDICAL SYSTEM</span> <span>AUTO EXHAUST TECH</span> <span>SAFETY SOLUTION</span>
-        </div>
-        <div class="footer-info">
-            <div class="footer-info-left">
-                <div>JEIL SteriSafe | Designing Safer Sterilization Environments</div>
-            </div>
-            <div class="footer-info-right">
-                <div class="footer-grid">
-                    <!-- 주소 1 -->
-                    <div class="footer-item">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>1. 인천 부평구 부평대로 283, 우림라이온스밸리 A동 B210호</span>
-                    </div>
-                    <div></div> 
-                    <!-- 전화번호 -->
-                    <div class="footer-item">
-                        <i class="fa-solid fa-phone"></i>
-                        <span>032-623-6233</span>
-                    </div>
-
-                    <!-- 주소 2 -->
-                    <div class="footer-item" style="margin-top: 6px;">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>2. 인천 부평구 부평대로 283, 우림라이온스밸리 A동 118B호</span>
-                    </div>
-                    <div style="margin-top: 6px;"></div> 
-                    <!-- 이메일 -->
-                    <div class="footer-item" style="margin-top: 6px;">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span class="email-link" onclick="openModal('info@jeilss.co.kr')">info@jeilss.co.kr</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // 회사소개 모달 제어
-        function openCompanyModal() { document.getElementById('companyModal').style.display = 'flex'; }
-        function closeCompanyModal() { document.getElementById('companyModal').style.display = 'none'; }
+    <div class="stage-wrap">
+      <div class="stage" id="stage" role="img" aria-label="플랫덕트 후드에서 가스가 유입되고, 후드에서 가스를 뽑아 H-100 감지기가 감지하고, 전기 신호가 AES 컨트롤러를 거쳐 배기전용팬을 작동시키는 구조도.">
+        <div class="aes-glow" aria-hidden="true"></div>
+        <img class="bp-bg" src="parts/bp.png" alt="" aria-hidden="true">
+        <div class="hwwrap" data-part="0" style="left:68.543%;top:9.528%;--d:0.30s;--hx:-160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="0" style="left:68.543%;top:9.528%;--d:0.55s;--hx:-160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="0" style="left:80.463%;top:29.666%;--d:0.55s;--hx:160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="0" style="left:80.463%;top:29.666%;--d:0.80s;--hx:160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="1" style="left:84.702%;top:16.550%;--d:1.40s;--hx:-160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="1" style="left:84.702%;top:16.550%;--d:1.65s;--hx:-160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="1" style="left:93.443%;top:35.889%;--d:1.65s;--hx:160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="1" style="left:93.443%;top:35.889%;--d:1.90s;--hx:160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="2" style="left:9.272%;top:18.418%;--d:2.50s;--hx:-160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="2" style="left:9.272%;top:18.418%;--d:2.75s;--hx:-160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="2" style="left:41.060%;top:40.707%;--d:2.75s;--hx:160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="2" style="left:41.060%;top:40.707%;--d:3.00s;--hx:160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="3" style="left:47.666%;top:28.203%;--d:3.60s;--hx:-160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="3" style="left:47.666%;top:28.203%;--d:3.85s;--hx:-160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="3" style="left:57.997%;top:38.950%;--d:3.85s;--hx:160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="3" style="left:57.997%;top:38.950%;--d:4.10s;--hx:160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="4" style="left:52.484%;top:43.819%;--d:4.70s;--hx:-160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="4" style="left:52.484%;top:43.819%;--d:4.95s;--hx:-160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="4" style="left:58.842%;top:57.171%;--d:4.95s;--hx:160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="4" style="left:58.842%;top:57.171%;--d:5.20s;--hx:160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="5" style="left:49.164%;top:61.703%;--d:5.80s;--hx:-160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="5" style="left:49.164%;top:61.703%;--d:6.05s;--hx:-160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <div class="hwwrap" data-part="5" style="left:62.281%;top:71.434%;--d:6.05s;--hx:160px;--hy:-120px;--hr:-90deg"><svg class="hw" viewBox="0 0 24 24"><rect x="9" y="11" width="6" height="11" rx="1" fill="#b8c4d2" stroke="#34445a" stroke-width=".7"/><polygon points="12,1.5 20.2,6.2 20.2,11.8 12,16.5 3.8,11.8 3.8,6.2" fill="#dfe7f0" stroke="#34445a" stroke-width=".7"/></svg></div>
+        <div class="hwwrap" data-part="5" style="left:62.281%;top:71.434%;--d:6.30s;--hx:160px;--hy:-80px;--hr:90deg"><svg class="hw" viewBox="0 0 24 24"><polygon points="12,2 20.5,7 20.5,17 12,22 3.5,17 3.5,7" fill="#cfd8e3" stroke="#34445a" stroke-width=".7"/><circle cx="12" cy="12" r="5.2" fill="#0b2340" stroke="#8fa0b5" stroke-width=".6"/></svg></div>
+        <img class="pf piece-part" src="parts/ctrl_0.png" alt="" style="left:66.225%;top:4.790%;width:16.556%;height:14.807%;--d:0.55s;--dx:-128px;--dy:-62px;--dr:13deg">
+        <img class="pf piece-part" src="parts/ctrl_1.png" alt="" style="left:66.225%;top:19.597%;width:16.556%;height:14.807%;--d:0.83s;--dx:-88px;--dy:55px;--dr:30deg">
+        <div class="hwwrap" data-part="aes" style="left:66.446%;top:19.401%;width:3.311%;height:2.515%;aspect-ratio:auto;margin:0;--d:0.50s;--hx:-24px;--hy:-179px;--hr:14deg"><img src="parts/mccb.png" alt="mccb" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:70.419%;top:17.485%;width:2.208%;height:3.713%;aspect-ratio:auto;margin:0;--d:0.62s;--hx:18px;--hy:-181px;--hr:3deg"><img src="parts/contactor.png" alt="contactor" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:73.289%;top:17.724%;width:1.545%;height:3.832%;aspect-ratio:auto;margin:0;--d:0.74s;--hx:30px;--hy:-155px;--hr:-13deg"><img src="parts/fuseholder.png" alt="fuseholder" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:75.276%;top:17.485%;width:0.993%;height:4.311%;aspect-ratio:auto;margin:0;--d:0.86s;--hx:17px;--hy:-156px;--hr:-12deg"><img src="parts/fuse.png" alt="fuse" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:67.550%;top:22.515%;width:6.843%;height:1.677%;aspect-ratio:auto;margin:0;--d:0.98s;--hx:16px;--hy:-144px;--hr:12deg"><img src="parts/termblock.png" alt="termblock" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:66.888%;top:23.712%;width:2.649%;height:2.036%;aspect-ratio:auto;margin:0;--d:1.10s;--hx:-2px;--hy:-159px;--hr:-1deg"><img src="parts/wire_red.png" alt="wire_red" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:69.757%;top:23.712%;width:2.649%;height:2.036%;aspect-ratio:auto;margin:0;--d:1.22s;--hx:13px;--hy:-165px;--hr:-5deg"><img src="parts/wire_black.png" alt="wire_black" style="width:100%;height:100%;display:block"></div>
+        <div class="hwwrap" data-part="aes" style="left:72.406%;top:23.712%;width:2.649%;height:2.036%;aspect-ratio:auto;margin:0;--d:1.34s;--hx:19px;--hy:-147px;--hr:-14deg"><img src="parts/wire_blue.png" alt="wire_blue" style="width:100%;height:100%;display:block"></div>
+        <img class="pf piece-part" src="parts/recv_0.png" alt="" style="left:83.002%;top:12.000%;width:12.141%;height:14.191%;--d:1.65s;--dx:64px;--dy:75px;--dr:-1deg">
+        <div class="lcd" aria-live="off" style="left:85.4%;top:14.9%;width:7.4%;height:5.0%"><span id="lcdNum">0.0</span></div>
+        <img class="pf piece-part" src="parts/recv_1.png" alt="" style="left:83.002%;top:26.191%;width:12.141%;height:14.248%;--d:1.93s;--dx:64px;--dy:-20px;--dr:-15deg">
+        <img class="pf piece-part" src="parts/fan_0.png" alt="" style="left:3.091%;top:13.174%;width:11.950%;height:32.777%;--d:2.75s;--dx:-74px;--dy:39px;--dr:21deg">
+        <img class="pf piece-part" src="parts/fan_1.png" alt="" style="left:15.041%;top:13.174%;width:26.556%;height:32.777%;--d:3.03s;--dx:81px;--dy:-39px;--dr:20deg">
+        <div class="drum-mask" style="left:30.177%;top:32.647%;width:13.278%;"><div class="drum"><i class="slat" style="transform: rotateX(0.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(22.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(45.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(67.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(90.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(112.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(135.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(157.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(180.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(202.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(225.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(247.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(270.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(292.50deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(315.00deg) translateZ(var(--rr));"></i><i class="slat" style="transform: rotateX(337.50deg) translateZ(var(--rr));"></i></div></div>
+        <img class="pf piece-part" src="parts/fan_2.png" alt="" style="left:41.598%;top:13.174%;width:5.643%;height:32.777%;--d:3.31s;--dx:-60px;--dy:47px;--dr:18deg">
+        <img class="pf piece-part" src="parts/elbow_0.png" alt="" style="left:45.657%;top:25.675%;width:14.349%;height:7.878%;--d:3.85s;--dx:-124px;--dy:-106px;--dr:21deg">
+        <img class="pf piece-part" src="parts/elbow_1.png" alt="" style="left:45.657%;top:33.553%;width:14.349%;height:7.925%;--d:4.13s;--dx:59px;--dy:128px;--dr:11deg">
+        <img class="pf piece-part" src="parts/duct_0.png" alt="" style="left:51.248%;top:40.678%;width:8.830%;height:9.817%;--d:4.95s;--dx:-16px;--dy:47px;--dr:5deg">
+        <img class="pf piece-part" src="parts/duct_1.png" alt="" style="left:51.248%;top:50.495%;width:8.830%;height:9.817%;--d:5.23s;--dx:8px;--dy:42px;--dr:16deg">
+        <img class="pf piece-part" src="parts/hood_0.png" alt="" style="left:46.614%;top:59.414%;width:18.217%;height:7.133%;--d:6.05s;--dx:164px;--dy:130px;--dr:-3deg">
+        <img class="pf piece-part" src="parts/hood_1.png" alt="" style="left:46.614%;top:66.547%;width:18.217%;height:7.176%;--d:6.33s;--dx:-82px;--dy:23px;--dr:-19deg">
+        <div class="unit-frame"></div>
+        <div class="ph" style="left:66.225%;top:4.790%;width:16.556%;height:29.614%;--d:0.4s;--d:2.00s"></div>
+        <div class="ph" style="left:83.002%;top:12.000%;width:12.141%;height:28.439%;--d:1.3s;--d:3.10s"></div>
+        <div class="ph" style="left:3.091%;top:13.174%;width:44.150%;height:32.777%;--d:2.2s;--d:4.20s"></div>
+        <div class="ph" style="left:45.657%;top:25.675%;width:14.349%;height:15.803%;--d:3.1s;--d:5.30s"></div>
+        <div class="ph" style="left:51.248%;top:40.678%;width:8.830%;height:19.634%;--d:4.0s;--d:6.40s"></div>
+        <div class="ph" style="left:46.614%;top:59.414%;width:18.217%;height:14.309%;--d:4.9s;--d:7.50s"></div>
+        <svg class="overlay" viewBox="0 0 906 835" aria-hidden="true">
+          <defs>
+            <linearGradient id="gBox" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9dfe6"/></linearGradient>
+            <linearGradient id="gDark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5b6573"/><stop offset="0.5" stop-color="#2f3742"/><stop offset="1" stop-color="#1f252d"/></linearGradient>
+            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7dd3fc"/></marker>
+          </defs>
+          <defs><pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M-2 16 L16 -2 M-2 2 L2 -2 M12 16 L16 12" stroke="#7dd3fc" stroke-width="1.6"/></pattern></defs><g class="floor-g"><rect class="floor-hatch" x="0" y="801" width="906" height="34" fill="url(#hatch)"/><path class="part floor" pathLength="1" d="M0 800 H906" stroke-width="3"/></g>
+          <!-- 신호선 (빨간색 튜브: 분기점 → 후드 / AES CR) -->
+          <circle cx="806.5" cy="366" r="5" fill="#38bdf8"/>
+          <g class="fit"><rect x="797.5" y="358" width="18" height="16" rx="4" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><rect x="800.5" y="361" width="12" height="3" rx="1.5" fill="#cfefff" opacity=".7"/><circle cx="570" cy="556" r="5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><circle cx="806.5" cy="800" r="4" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/></g>
+          <g class="tube tb-s5"><path class="tl" pathLength="1" d="M715.5 281 V326 Q715.5 340 729.5 340 H806" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M715.5 281 V326 Q715.5 340 729.5 340 H806" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M715.5 281 V326 Q715.5 340 729.5 340 H806" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g><circle cx="806" cy="340" r="4.5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/><circle cx="715.5" cy="283" r="3.5" fill="#0a3d6b" stroke="#7dd3fc" stroke-width="1"/>
+          <g class="tube tb-s0"><path class="tl" pathLength="1" d="M806.3 273.0 V366" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.3 273.0 V366" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.3 273.0 V366" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
+          <g class="tube tb-s1"><path class="tl" pathLength="1" d="M806.5 366 V492 Q806.5 556 742.5 556 H570" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.5 366 V492 Q806.5 556 742.5 556 H570" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.5 366 V492 Q806.5 556 742.5 556 H570" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
+          <path id="e31" class="sig" d="M585 500 H700 V330 H756"/>
+          <path id="e12" class="sig" d="M764 100 V18 Q764 4 750 4 H675 V40"/>
+          <g class="tube tb-s4"><path class="tl" pathLength="1" d="M806.5 366 V800" stroke="#0a3d6b" stroke-width="9"/><path class="tl" pathLength="1" d="M806.5 366 V800" stroke="#2a86d6" stroke-width="5.5"/><path class="tl" pathLength="1" d="M806.5 366 V800" stroke="#cfefff" stroke-width="1.6" opacity=".8"/></g>
+          <path id="s3top" class="sig" d="M675 40 V4"/>
+          <path id="s3" class="sig" d="M675 4 H196 Q180 4 180 20 V287"/>
+          <!-- 가스 흐름 (후드 → 엘보 → 팬) -->
+          <g>
+            <circle class="gas" r="5"><animateMotion dur="3.2s" repeatCount="indefinite" begin="0s" path="M504 496 V249 H228"/></circle>
+            <circle class="gas" r="5"><animateMotion dur="3.2s" repeatCount="indefinite" begin="-0.8s" path="M504 496 V249 H228"/></circle>
+            <circle class="gas" r="5"><animateMotion dur="3.2s" repeatCount="indefinite" begin="-1.6s" path="M504 496 V249 H228"/></circle>
+            <circle class="gas" r="5"><animateMotion dur="3.2s" repeatCount="indefinite" begin="-2.4s" path="M504 496 V249 H228"/></circle>
+          </g>
+          <!-- 라벨 -->
+          <!-- 단계 번호 -->
+          <g class="badge" data-step="1" transform="translate(436,505)"><circle r="13" fill="#f59e6b"/><text y="6" text-anchor="middle" font-size="15" font-weight="700" fill="#0b2340">3</text></g>
+          <g class="badge" data-step="1" transform="translate(796,79)"><circle r="13" fill="#f59e6b"/><text y="6" text-anchor="middle" font-size="15" font-weight="700" fill="#0b2340">1</text></g>
+          <g class="badge" data-step="2" transform="translate(568,84)"><circle r="13" fill="#f59e6b"/><text y="6" text-anchor="middle" font-size="15" font-weight="700" fill="#0b2340">2</text></g>
+          
+          <g class="badge" data-step="3" transform="translate(256,90)"><circle r="13" fill="#f59e6b"/><text y="6" text-anchor="middle" font-size="15" font-weight="700" fill="#0b2340">4</text></g>
         
-        // 멸균안전기술 모달 제어
-        function openTechModal() { document.getElementById('techModal').style.display = 'flex'; }
-        function closeTechModal() { document.getElementById('techModal').style.display = 'none'; }
+          <!-- 플랫덕트 입구로 흘러드는 노란 먼지 -->
+          <g class="dust-layer"><circle class="dust" r="2.3" style="--x0:305px;--y0:590px;--x1:210px;--y1:-13px;animation-duration:2.95s;animation-delay:-1.08s"/><circle class="dust" r="3.9" style="--x0:336px;--y0:567px;--x1:164px;--y1:10px;animation-duration:2.33s;animation-delay:-0.99s"/><circle class="dust" r="4.2" style="--x0:271px;--y0:605px;--x1:242px;--y1:-12px;animation-duration:3.01s;animation-delay:-1.19s"/><circle class="dust" r="3.8" style="--x0:258px;--y0:732px;--x1:233px;--y1:-153px;animation-duration:2.36s;animation-delay:-0.73s"/><circle class="dust" r="2.3" style="--x0:281px;--y0:676px;--x1:233px;--y1:-94px;animation-duration:2.97s;animation-delay:-0.19s"/><circle class="dust" r="2.8" style="--x0:285px;--y0:696px;--x1:215px;--y1:-114px;animation-duration:3.02s;animation-delay:-1.37s"/><circle class="dust" r="3.7" style="--x0:385px;--y0:700px;--x1:103px;--y1:-113px;animation-duration:2.94s;animation-delay:-2.57s"/><circle class="dust" r="3.2" style="--x0:299px;--y0:756px;--x1:181px;--y1:-173px;animation-duration:3.26s;animation-delay:-0.50s"/><circle class="dust" r="3.6" style="--x0:257px;--y0:694px;--x1:266px;--y1:-107px;animation-duration:3.43s;animation-delay:-1.07s"/><circle class="dust" r="3.5" style="--x0:351px;--y0:676px;--x1:151px;--y1:-85px;animation-duration:3.52s;animation-delay:-1.67s"/><circle class="dust" r="3.0" style="--x0:260px;--y0:700px;--x1:254px;--y1:-106px;animation-duration:3.35s;animation-delay:-0.95s"/><circle class="dust" r="3.7" style="--x0:364px;--y0:565px;--x1:139px;--y1:15px;animation-duration:2.36s;animation-delay:-0.14s"/><circle class="dust" r="3.3" style="--x0:272px;--y0:610px;--x1:226px;--y1:-18px;animation-duration:2.31s;animation-delay:-1.04s"/><circle class="dust" r="4.0" style="--x0:400px;--y0:724px;--x1:129px;--y1:-143px;animation-duration:2.78s;animation-delay:-1.00s"/><circle class="dust" r="3.4" style="--x0:413px;--y0:590px;--x1:71px;--y1:-10px;animation-duration:2.53s;animation-delay:-1.23s"/><circle class="dust" r="3.6" style="--x0:295px;--y0:561px;--x1:205px;--y1:22px;animation-duration:2.99s;animation-delay:-2.85s"/><circle class="dust" r="3.9" style="--x0:338px;--y0:684px;--x1:179px;--y1:-107px;animation-duration:3.46s;animation-delay:-2.70s"/><circle class="dust" r="2.3" style="--x0:386px;--y0:638px;--x1:113px;--y1:-61px;animation-duration:3.09s;animation-delay:-0.19s"/><circle class="dust" r="2.4" style="--x0:285px;--y0:592px;--x1:209px;--y1:-16px;animation-duration:2.20s;animation-delay:-0.33s"/><circle class="dust" r="2.9" style="--x0:312px;--y0:565px;--x1:218px;--y1:22px;animation-duration:2.41s;animation-delay:-0.61s"/><circle class="dust" r="2.4" style="--x0:312px;--y0:585px;--x1:216px;--y1:9px;animation-duration:2.85s;animation-delay:-1.38s"/><circle class="dust" r="4.1" style="--x0:267px;--y0:629px;--x1:222px;--y1:-38px;animation-duration:2.43s;animation-delay:-0.06s"/><circle class="dust" r="3.9" style="--x0:340px;--y0:589px;--x1:168px;--y1:-13px;animation-duration:2.94s;animation-delay:-2.88s"/><circle class="dust" r="3.8" style="--x0:368px;--y0:612px;--x1:128px;--y1:-33px;animation-duration:3.28s;animation-delay:-1.75s"/><circle class="dust" r="3.8" style="--x0:306px;--y0:605px;--x1:220px;--y1:-11px;animation-duration:3.39s;animation-delay:-2.74s"/><circle class="dust" r="2.8" style="--x0:376px;--y0:605px;--x1:130px;--y1:-23px;animation-duration:2.24s;animation-delay:-0.06s"/><circle class="dust" r="4.1" style="--x0:294px;--y0:699px;--x1:241px;--y1:-114px;animation-duration:3.51s;animation-delay:-3.47s"/><circle class="dust" r="4.0" style="--x0:312px;--y0:604px;--x1:175px;--y1:-25px;animation-duration:2.49s;animation-delay:-1.55s"/><circle class="dust" r="4.0" style="--x0:393px;--y0:656px;--x1:122px;--y1:-66px;animation-duration:2.32s;animation-delay:-1.53s"/><circle class="dust" r="3.8" style="--x0:383px;--y0:710px;--x1:121px;--y1:-131px;animation-duration:3.30s;animation-delay:-1.10s"/><circle class="dust" r="2.5" style="--x0:415px;--y0:639px;--x1:83px;--y1:-46px;animation-duration:3.21s;animation-delay:-0.55s"/><circle class="dust" r="3.5" style="--x0:276px;--y0:741px;--x1:250px;--y1:-162px;animation-duration:3.36s;animation-delay:-3.29s"/><circle class="dust" r="3.3" style="--x0:310px;--y0:670px;--x1:171px;--y1:-93px;animation-duration:3.56s;animation-delay:-2.31s"/><circle class="dust" r="2.8" style="--x0:409px;--y0:647px;--x1:121px;--y1:-56px;animation-duration:2.50s;animation-delay:-0.63s"/><circle class="dust" r="2.9" style="--x0:291px;--y0:677px;--x1:198px;--y1:-94px;animation-duration:2.38s;animation-delay:-2.17s"/><circle class="dust" r="3.3" style="--x0:328px;--y0:677px;--x1:204px;--y1:-93px;animation-duration:3.48s;animation-delay:-1.75s"/><circle class="dust" r="2.5" style="--x0:339px;--y0:564px;--x1:162px;--y1:16px;animation-duration:2.21s;animation-delay:-1.76s"/><circle class="dust" r="3.8" style="--x0:330px;--y0:705px;--x1:178px;--y1:-123px;animation-duration:2.93s;animation-delay:-1.63s"/><circle class="dust" r="3.3" style="--x0:268px;--y0:672px;--x1:220px;--y1:-91px;animation-duration:3.28s;animation-delay:-1.67s"/><circle class="dust" r="3.6" style="--x0:379px;--y0:742px;--x1:122px;--y1:-155px;animation-duration:2.91s;animation-delay:-1.49s"/><circle class="dust" r="4.1" style="--x0:327px;--y0:667px;--x1:177px;--y1:-74px;animation-duration:3.18s;animation-delay:-2.79s"/><circle class="dust" r="3.1" style="--x0:294px;--y0:672px;--x1:240px;--y1:-81px;animation-duration:2.39s;animation-delay:-0.29s"/><circle class="dust" r="2.5" style="--x0:262px;--y0:608px;--x1:214px;--y1:-20px;animation-duration:3.30s;animation-delay:-2.96s"/><circle class="dust" r="4.1" style="--x0:372px;--y0:692px;--x1:110px;--y1:-100px;animation-duration:3.55s;animation-delay:-0.78s"/><circle class="dust" r="3.2" style="--x0:318px;--y0:657px;--x1:220px;--y1:-66px;animation-duration:2.43s;animation-delay:-1.05s"/><circle class="dust" r="3.1" style="--x0:308px;--y0:599px;--x1:185px;--y1:-10px;animation-duration:2.23s;animation-delay:-1.23s"/><circle class="dust" r="3.8" style="--x0:253px;--y0:626px;--x1:260px;--y1:-41px;animation-duration:2.29s;animation-delay:-2.26s"/><circle class="dust" r="2.5" style="--x0:415px;--y0:581px;--x1:74px;--y1:-4px;animation-duration:3.29s;animation-delay:-0.89s"/><circle class="dust" r="3.3" style="--x0:322px;--y0:742px;--x1:204px;--y1:-162px;animation-duration:2.41s;animation-delay:-2.21s"/><circle class="dust" r="4.1" style="--x0:369px;--y0:578px;--x1:107px;--y1:10px;animation-duration:2.80s;animation-delay:-0.20s"/><circle class="dust" r="3.1" style="--x0:358px;--y0:720px;--x1:120px;--y1:-129px;animation-duration:2.29s;animation-delay:-1.98s"/><circle class="dust" r="2.7" style="--x0:308px;--y0:671px;--x1:226px;--y1:-90px;animation-duration:2.38s;animation-delay:-1.25s"/><circle class="dust" r="3.7" style="--x0:269px;--y0:592px;--x1:207px;--y1:-13px;animation-duration:2.64s;animation-delay:-0.80s"/><circle class="dust" r="2.2" style="--x0:299px;--y0:660px;--x1:184px;--y1:-78px;animation-duration:2.23s;animation-delay:-0.56s"/><circle class="dust" r="3.8" style="--x0:375px;--y0:670px;--x1:110px;--y1:-86px;animation-duration:3.51s;animation-delay:-0.37s"/><circle class="dust" r="4.2" style="--x0:323px;--y0:659px;--x1:204px;--y1:-76px;animation-duration:2.91s;animation-delay:-2.00s"/><circle class="dust" r="2.3" style="--x0:308px;--y0:726px;--x1:210px;--y1:-139px;animation-duration:2.77s;animation-delay:-0.96s"/><circle class="dust" r="3.9" style="--x0:272px;--y0:574px;--x1:249px;--y1:6px;animation-duration:2.43s;animation-delay:-0.21s"/><circle class="dust" r="2.5" style="--x0:398px;--y0:694px;--x1:93px;--y1:-114px;animation-duration:2.61s;animation-delay:-1.20s"/><circle class="dust" r="4.1" style="--x0:326px;--y0:613px;--x1:210px;--y1:-19px;animation-duration:2.97s;animation-delay:-0.73s"/><circle class="dust" r="2.6" style="--x0:303px;--y0:631px;--x1:169px;--y1:-48px;animation-duration:2.86s;animation-delay:-1.44s"/><circle class="dust" r="2.2" style="--x0:336px;--y0:561px;--x1:154px;--y1:17px;animation-duration:2.76s;animation-delay:-0.11s"/><circle class="dust" r="3.6" style="--x0:302px;--y0:607px;--x1:209px;--y1:-21px;animation-duration:3.25s;animation-delay:-2.14s"/><circle class="dust" r="3.5" style="--x0:399px;--y0:638px;--x1:94px;--y1:-44px;animation-duration:2.41s;animation-delay:-1.74s"/><circle class="dust" r="2.5" style="--x0:257px;--y0:727px;--x1:273px;--y1:-140px;animation-duration:3.23s;animation-delay:-2.62s"/><circle class="dust" r="4.0" style="--x0:339px;--y0:661px;--x1:188px;--y1:-70px;animation-duration:3.36s;animation-delay:-1.96s"/><circle class="dust" r="2.4" style="--x0:366px;--y0:699px;--x1:121px;--y1:-122px;animation-duration:2.39s;animation-delay:-0.86s"/><circle class="dust" r="2.2" style="--x0:392px;--y0:672px;--x1:121px;--y1:-84px;animation-duration:3.15s;animation-delay:-1.54s"/><circle class="dust" r="3.7" style="--x0:386px;--y0:710px;--x1:120px;--y1:-124px;animation-duration:3.12s;animation-delay:-0.21s"/><circle class="dust" r="4.2" style="--x0:293px;--y0:575px;--x1:197px;--y1:14px;animation-duration:2.49s;animation-delay:-1.84s"/></g>
+        </svg>
+      </div>
 
-        // AS 접수 모달 제어
-        let currentEmail = "info@jeilss.co.kr";
-        function openModal(email) {
-            currentEmail = email;
-            document.getElementById('modalEmailText').innerText = email;
-            document.getElementById('asModal').style.display = 'flex';
-        }
-        function closeModal() { document.getElementById('asModal').style.display = 'none'; }
-        
-        function openNaverMailAndCopy() {
-            navigator.clipboard.writeText(currentEmail);
-            window.open('https://mail.naver.com/v2/new', '_blank');
-            closeModal();
-        }
-    </script>
+      <div class="side">
+        <div class="now" aria-live="polite">
+          <div class="k" id="stepNo">준비</div>
+          <p id="stepText">설계 도면을 그립니다.</p>
+        </div>
+        <ol class="steps" id="stepList">
+          <li data-s="1"><span class="n">1</span><span>3번 후드에서 가스를 튜브로 뽑아 1번 감지기가 감지합니다.</span></li>
+          <li data-s="2"><span class="n">2</span><span>1번 감지기가 2번 AES 컨트롤러에 전기 신호를 보냅니다.</span></li>
+          <li data-s="3"><span class="n">3</span><span>2번 AES가 4번 배기전용팬에 신호를 보내 팬이 작동하고 공기를 배출합니다.</span></li>
+        </ol>
+        <div class="controls">
+          <button id="toggle" type="button">일시정지</button>
+          <button id="replay" type="button">다시 보기</button>
+          <button id="skip" type="button" class="ghost">완성 사진 보기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Gas sampling</p>
+    <h2 style="margin-top:8px;">가스 감지 배치</h2>
+    <p class="sub">감지기 위치와 채취 지점은 설치 현장마다 달라질 수 있습니다. 아래는 기본 배치 기준입니다.</p>
+    <div class="cols">
+      <div class="card">
+        <h3>감지기와 튜브</h3>
+        <ul class="plain">
+          <li>센코사 <b>H-100 흡입형 감지기</b>를 벽에 설치합니다.</li>
+          <li>감지기 하단 공기유입부에 공압튜브를 연결합니다.</li>
+          <li>튜브는 <b>T자로 두 갈래</b>로 분기합니다.</li>
+        </ul>
+      </div>
+      <div class="card hl">
+        <h3>두 개의 채취 지점</h3>
+        <ul class="plain">
+          <li><b>상부:</b> 바닥에서 1500mm 위, 탁상형 멸균기 문 바로 위</li>
+          <li><b>하부:</b> 멸균실 바닥에서 200mm 위</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Difference</p>
+    <h2 style="margin-top:8px;">기존 방식과 다른 점</h2>
+    <div class="cols">
+      <div class="card">
+        <p class="tag">기존 방식</p>
+        <h3 style="margin-top:6px;">바닥 30cm에서만 흡입</h3>
+        <p style="margin-top:10px;">잔류 가스를 바닥 한 곳에서만 빨아냅니다. 상승기류를 따라 올라온 가스는 그대로 남을 수 있습니다.</p>
+      </div>
+      <div class="card hl">
+        <p class="tag">제일 AES</p>
+        <h3 style="margin-top:6px;">바닥 30cm와 멸균기 상부에서 함께 배기</h3>
+        <p style="margin-top:10px;">바닥과 상부에서 동시에 배출해, 상승기류로 인한 작업자 피해를 최소화합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-sec" id="patent">
+    <p class="eyebrow">특허기술</p>
+    <p class="lead" style="margin-top:0">제일 AES는 멸균기 잔류 유독가스 배기시스템으로 특허 등록된 기술입니다. (특허 제10-2803770호, 등록 2025.04.28)</p>
+  </section>
+
+<section class="site-sec" id="products">
+  <div class="site-wrap">
+    <p class="eyebrow">제품소개</p>
+    <h2>제일이 제안하는 솔루션</h2>
+    <p class="lead">의료현장에서 사용되는 다양한 멸균 관련 제품과 함께 작업자의 안전을 위한 솔루션을 제공합니다.</p>
+    <ul class="prod-list">
+      <li><b>잔류유독가스 자동배기시스템</b><span>멸균기에 남은 잔류 유독가스를 자동으로 배기합니다. (특허 등록 기술)</span></li>
+      <li><b>가스감지기 및 모니터링 시스템</b><span>유해가스를 감지하고 작업환경을 모니터링합니다.</span></li>
+      <li><b>멸균기</b><span>의료기관 및 산업현장에서 사용되는 멸균기를 공급합니다.</span></li>
+      <li><b>Biological Indicator (BI)</b><span>멸균 공정의 결과를 확인하는 생물학적 지시제입니다.</span></li>
+      <li><b>Chemical Indicator (CI)</b><span>멸균 조건에 노출되었는지 확인하는 화학적 지시제입니다.</span></li>
+      <li><b>Process Challenge Device (PCD)</b><span>멸균 공정의 성능을 검증하는 공정 시험 장치입니다.</span></li>
+      <li><b>맞춤형 산업보건 솔루션</b><span>의료기관의 현장에 맞춘 산업보건 솔루션을 제안합니다.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+    <p class="eyebrow">Purpose & Function</p>
+    <h2 style="margin-top:8px;">용도와 기능</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>용도</h3>
+        <p style="margin-top:10px;">의료기관에서 멸균기 사용 시 발생할 수 있는 잔류 가스를 자동 또는 수동으로 배기하여 작업자의 안전을 보호합니다.</p>
+      </div>
+      <div class="card">
+        <h3>기능</h3>
+        <ul class="plain">
+          <li>멸균기에서 멸균 완료 후 문을 열었을 때 외부 배기팬이 작동합니다.</li>
+          <li>사용자가 필요할 때 수동으로 배기팬을 작동시킬 수 있습니다.</li>
+          <li>외부 가스감지기 경보가 발생하면 자동으로 배기팬이 작동합니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    특허 범위: 이 기술의 특허는 개별 제품이 아니라 <b>감지, 수신, 제어, 배기 팬, 후드가 연결된 전체 구성 시스템</b>에 대한 것입니다.
+  </div>
+
+  <section class="site-sec" id="contact">
+  <div class="site-wrap">
+    <p class="eyebrow">AS접수</p>
+    <h2>빠른 문의 / AS 접수</h2>
+    <p class="lead">제품 문의와 AS 접수는 전화 또는 이메일로 받고 있습니다.</p>
+    <dl class="contact-list">
+      <div><dt>전화</dt><dd>032-623-6233</dd></div>
+      <div><dt>이메일</dt><dd>info@jeilss.co.kr</dd></div>
+      <div><dt>주소</dt><dd>인천 부평구 부평대로 283, 우림라이온스밸리 A동 B210호<br>인천 부평구 부평대로 283, 우림라이온스밸리 A동 118B호</dd></div>
+    </dl>
+  </div>
+</section>
+
+<footer class="site-foot"><p>JEIL SteriSafe | Designing Safer Sterilization Environments</p><p>제일멸균안전 · 인천 부평구 부평대로 283</p></footer>
+</div>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var svg = stage.querySelector('svg.overlay');
+  var stepNo = document.getElementById('stepNo');
+  var stepText = document.getElementById('stepText');
+  var items = document.querySelectorAll('#stepList li');
+  var badges = document.querySelectorAll('.badge');
+  var toggleBtn = document.getElementById('toggle');
+  var steps = [
+    '설계 도면을 그립니다.',
+    '3번 후드에서 가스를 튜브로 뽑아 1번 감지기가 감지합니다.',
+    '1번 감지기가 2번 AES 컨트롤러에 전기 신호를 보냅니다.',
+    '2번 AES가 4번 배기전용팬에 신호를 보내 팬이 작동하고 공기를 배출합니다.'
+  ];
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timeline = [], idx = 0, elapsed = 0, lastTick = 0, tick = null, finished = false;
+
+  function setStep(n) {
+    stepNo.textContent = n === 0 ? '준비' : 'STEP ' + n;
+    stepText.textContent = steps[n];
+    items.forEach(function (li) {
+      var s = +li.dataset.s;
+      li.classList.toggle('active', s === n);
+      li.classList.toggle('done', s < n);
+    });
+    badges.forEach(function (b) { b.classList.toggle('on', +b.dataset.step <= n); });
+  }
+  function setBtn() { toggleBtn.textContent = tick ? '일시정지' : (finished ? '처음부터' : '재생'); }
+  function startClock() {
+    if (tick || finished) return;
+    lastTick = performance.now();
+    tick = setInterval(step, 50);
+    stage.classList.remove('paused');
+    if (svg.unpauseAnimations) svg.unpauseAnimations();
+    setBtn();
+  }
+  function stopClock() {
+    if (!tick) return;
+    clearInterval(tick); tick = null;
+    stage.classList.add('paused');
+    if (svg.pauseAnimations) svg.pauseAnimations();
+    setBtn();
+  }
+  function step() {
+    var now = performance.now();
+    elapsed += now - lastTick; lastTick = now;
+    while (idx < timeline.length && elapsed >= timeline[idx][0]) {
+      var fn = timeline[idx][1];
+      idx++;
+      fn();
+      if (finished) return;
+    }
+  }
+  function finishStage() {
+    clearInterval(tick); tick = null;
+    finished = true;
+    if (svg.unpauseAnimations) svg.unpauseAnimations();
+    stage.classList.add('snap');
+    stage.className = 'stage snap drawn placed unit filled s1-on s2-on e12-on s3-on fan-on';
+    setTimeout(function () { stage.classList.remove('snap'); }, 80);
+    if (window.startLcd) window.startLcd();
+    setStep(3);
+    items.forEach(function (li) { li.classList.add('done'); li.classList.remove('active'); });
+    stepNo.textContent = '완성';
+    stepText.textContent = steps[3] + ' 실제 설치된 AES 시스템입니다.';
+    setBtn();
+  }
+  function buildTimeline() {
+    return [
+      [150, function () { stage.classList.add('drawn'); }],
+      [400, function () { stage.classList.add('placed'); }],
+      [2000, function () { stage.querySelectorAll('.hwwrap[data-part="0"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [2700, function () { stage.querySelectorAll('.hwwrap[data-part="aes"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [3100, function () { stage.querySelectorAll('.hwwrap[data-part="1"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [4200, function () { stage.querySelectorAll('.hwwrap[data-part="2"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [5300, function () { stage.querySelectorAll('.hwwrap[data-part="3"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [6400, function () { stage.querySelectorAll('.hwwrap[data-part="4"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [7500, function () { stage.querySelectorAll('.hwwrap[data-part="5"]').forEach(function (e) { e.classList.add('gone'); }); }],
+      [8400, function () { stage.classList.add('unit'); if (window.startLcd) window.startLcd(); }],
+      [9800, function () { setStep(1); stage.classList.add('gas-on', 's1-on', 's2-on'); }],
+      [11400, function () { setStep(2); stage.classList.add('sensor-on', 'e12-on'); stage.classList.remove('gas-on'); }],
+      [13000, function () { setStep(3); stage.classList.add('s3-on', 'fan-on'); stage.classList.remove('sensor-on', 'e12-on'); }],
+      [14800, function () { stage.classList.add('filled'); stepText.textContent = steps[3]; }],
+      [16600, function () { finishStage(); }]
+    ];
+  }
+
+  function play() {
+    clearInterval(tick); tick = null;
+    finished = false; idx = 0; elapsed = 0;
+    stage.className = 'stage';
+    if (window.stopLcd) window.stopLcd();
+    setStep(0);
+    timeline = buildTimeline();
+    if (reduce) { finishStage(); return; }
+    startClock();
+  }
+  toggleBtn.addEventListener('click', function () {
+    if (finished) play();
+    else if (tick) stopClock();
+    else startClock();
+  });
+  document.getElementById('replay').addEventListener('click', play);
+  document.getElementById('skip').addEventListener('click', finishStage);
+  play();
+})();
+</script>
+<script>
+(function () {
+  var el = document.getElementById('lcdNum');
+  var n = 0, reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function show() { el.textContent = (n / 10).toFixed(1); }
+  show();
+  if (reduce) return;
+  var timer = null;
+  window.startLcd = function () { if (timer) return; timer = setInterval(function () { n = (n + 1) % 201; show(); }, 300); };
+  window.stopLcd = function () { clearInterval(timer); timer = null; };
+})();
+</script>
 </body>
 </html>
