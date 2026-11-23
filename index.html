@@ -427,6 +427,10 @@ ol.steps li { border-bottom: 1px solid var(--line); }
 
 /* 반복 시작: 부품을 지연 없이 즉시 흩어 놓음 */
 .stage.reset .pf, .stage.reset .hwwrap, .stage.reset .pimg, .stage.reset .ph, .stage.reset .lcd, .stage.reset .drum-mask { transition-delay: 0s !important; transition-duration: .6s !important; }
+
+/* 배경 없음: 흰 바탕 + 그림만 */
+.stage, .stage.filled { background: #ffffff !important; background-image: none !important; }
+.stage .bp-bg, .stage .aes-glow { display: none !important; }
 </style>
 </head>
 <body>
@@ -458,19 +462,7 @@ ol.steps li { border-bottom: 1px solid var(--line); }
     <p class="lead">멸균 후 남은 잔류 유독가스를 바닥 30cm와 멸균기 상부에서 함께 배출해, 상승기류로 인한 작업자 피해를 줄입니다.</p>
   </header>
 
-  <section class="site-sec" id="about">
-  <div class="site-wrap">
-    <p class="eyebrow">회사소개</p>
-    <h2>의료현장의 안전을 생각하는 제일(JEIL)</h2>
-    <p class="lead">안녕하세요. 제일(JEIL)입니다. 제일은 의료기관 및 산업현장에서 사용되는 멸균기, Biological Indicator(BI), Chemical Indicator(CI), Process Challenge Device(PCD) 등 양질의 멸균 관련 제품을 공급하고, 보다 안전한 멸균환경을 위한 산업보건 솔루션을 제안하는 전문기업입니다.</p>
-    <div class="site-cols">
-      <div class="site-card"><h3>왜 새로운 솔루션을 제안하는가</h3><p>멸균은 의료기관에서 가장 중요한 감염관리 과정 중 하나입니다. 그러나 지금까지의 멸균 모니터링은 멸균이 정상적으로 이루어졌는지 확인하는 데 초점이 맞춰져 있었고, 멸균 후 잔류 유해가스에 대한 작업자 노출 관리는 상대적으로 관심을 받지 못했습니다.</p></div>
-      <div class="site-card"><h3>다른 시각으로 접근합니다</h3><p>“왜 지금까지 이렇게 관리되어 왔을까?”, “더 안전한 방법은 없을까?”라는 질문을 던져 왔습니다. 멸균의 성공 여부만큼 중요한 것은 멸균 작업을 수행하는 의료진의 안전이라고 생각합니다.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="site-sec" id="aes">
+  <section class="site-sec" id="aes">
     <p class="eyebrow">멸균안전기술</p>
 
     <div class="stage-wrap">
@@ -601,7 +593,19 @@ ol.steps li { border-bottom: 1px solid var(--line); }
         </div></div>
   </section>
 
-  <section>
+  <section class="site-sec" id="about">
+  <div class="site-wrap">
+    <p class="eyebrow">회사소개</p>
+    <h2>의료현장의 안전을 생각하는 제일(JEIL)</h2>
+    <p class="lead">안녕하세요. 제일(JEIL)입니다. 제일은 의료기관 및 산업현장에서 사용되는 멸균기, Biological Indicator(BI), Chemical Indicator(CI), Process Challenge Device(PCD) 등 양질의 멸균 관련 제품을 공급하고, 보다 안전한 멸균환경을 위한 산업보건 솔루션을 제안하는 전문기업입니다.</p>
+    <div class="site-cols">
+      <div class="site-card"><h3>왜 새로운 솔루션을 제안하는가</h3><p>멸균은 의료기관에서 가장 중요한 감염관리 과정 중 하나입니다. 그러나 지금까지의 멸균 모니터링은 멸균이 정상적으로 이루어졌는지 확인하는 데 초점이 맞춰져 있었고, 멸균 후 잔류 유해가스에 대한 작업자 노출 관리는 상대적으로 관심을 받지 못했습니다.</p></div>
+      <div class="site-card"><h3>다른 시각으로 접근합니다</h3><p>“왜 지금까지 이렇게 관리되어 왔을까?”, “더 안전한 방법은 없을까?”라는 질문을 던져 왔습니다. 멸균의 성공 여부만큼 중요한 것은 멸균 작업을 수행하는 의료진의 안전이라고 생각합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
     <p class="eyebrow">Gas sampling</p>
     <h2 style="margin-top:8px;">가스 감지 배치</h2>
     <p class="sub">감지기 위치와 채취 지점은 설치 현장마다 달라질 수 있습니다. 아래는 기본 배치 기준입니다.</p>
