@@ -716,7 +716,11 @@ footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
     });
     badges.forEach(function (b) { b.classList.toggle('on', +b.dataset.step <= n); });
   }
-  function setBtn() { toggleBtn.textContent = tick ? '일시정지' : (finished ? '처음부터' : '재생'); }
+  function setBtn() {
+    if (finished) { toggleBtn.style.display = 'none'; return; }
+    toggleBtn.style.display = '';
+    toggleBtn.textContent = tick ? '일시정지' : '재생';
+  }
   function startClock() {
     if (tick || finished) return;
     lastTick = performance.now();
